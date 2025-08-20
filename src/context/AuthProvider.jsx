@@ -12,22 +12,26 @@ export default function AuthContextProvider({children}){
         // เอา token ไปตรวจสอบ
     },[])
 
-    const login = async () =>{
+    const login = async (email , password) =>{
         // login here
-        setUser({gmail : 'test.com' , role : 'admin'})
+        setUser({email : 'test.com' , role : 'admin'})
 
         // จัดเก็บ token JWT ด้วย
     }
 
     const logout = async () =>{
         setUser(null)
-        localStorage.removeItem(token)
+        // localStorage.removeItem(token)
+    }
+
+    const resetPassword = async (email) =>{
+
     }
 
     if(loading)return (<LoadingPage/>)    
 
     return(
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout , resetPassword }}>
             {children}
         </AuthContext.Provider>
     )

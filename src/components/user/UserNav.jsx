@@ -1,45 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
-import { HiMenu, HiX } from "react-icons/hi"; // ใช้ไอคอน hamburger และ close
+import { useAuth } from "../../context/AuthProvider";
+import { HiMenu, HiX } from "react-icons/hi";
 
-export default function AdminNavbar() {
+export default function UserNavbar() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user } = useAuth();
+  const [currUser, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  useEffect(() => {
+    setUser(user);
+  }, [user]);
 
   const menuItems = [
-    { name: "หน้าแรก", path : '/admin', onClick: () => navigate("/admin") },
-    { name: "จัดการสมาคม", path: '/admin/member' ,  onClick: () => navigate("/admin/member") },
-    { name: "ออกจากระบบ", onClick: handleLogout },
+    { name: "หน้าแรก", path:'/' , onClick: () => navigate("/") },
+    { name: "สมาคม", path:'/member' , onClick: () => navigate("/member") },
+    // แสดงปุ่มเข้าสู่ระบบถ้าไม่ได้ล็อกอิน
+    ...(!currUser ? [{ name: "เข้าสู่ระบบ", onClick: () => navigate("/login") }] : []),
   ];
 
   return (
-    <nav className="w-full bg-white shadow-md">
+    <nav className="w-full bg-white">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <div
-          onClick={() => navigate("/admin")}
-          className="text-2xl font-bold text-gray-800 cursor-pointer hover:text-blue-500 transition-colors"
+          onClick={() => navigate("/")}
+          className="text-xl text-gray-800 cursor-pointer hover:text-blue-500 transition-colors"
         >
-          KU ART&SCI (Admin)
+          KU ART&SCI
         </div>
+
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
           {menuItems.map((item) => (
             <div
               key={item.name}
               onClick={item.onClick}
-              className={`text-gray-700 font-medium cursor-pointer hover:text-blue-500 transition-colors 
+              className={`text-gray-700  cursor-pointer hover:text-blue-500 transition-colors 
                 ${location.pathname === item.path ?  'underline underline-offset-8' : ''}`}
             >
               {item.name}
@@ -67,11 +65,11 @@ export default function AdminNavbar() {
                 key={item.name}
                 onClick={() => {
                   item.onClick();
-                  setIsOpen(false); // ปิดเมนูหลังคลิก
+                  setIsOpen(false);
                 }}
-                className={`text-gray-700 font-medium cursor-pointer hover:text-blue-500 transition-colors 
+                className={`text-gray-700  cursor-pointer hover:text-blue-500 transition-colors 
                 ${location.pathname === item.path ?  'underline underline-offset-8' : ''}`}
-                >
+              >
                 {item.name}
               </div>
             ))}

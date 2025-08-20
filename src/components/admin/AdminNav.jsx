@@ -1,43 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
-import { HiMenu, HiX } from "react-icons/hi";
+import { useAuth } from "../../context/AuthProvider";
+import { HiMenu, HiX } from "react-icons/hi"; // ใช้ไอคอน hamburger และ close
 
-export default function UserNavbar() {
+export default function AdminNavbar() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [currUser, setUser] = useState(null);
+  const { logout , user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    setUser(user);
-  }, [user]);
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   const menuItems = [
-    { name: "หน้าแรก", path:'/' , onClick: () => navigate("/") },
-    { name: "สมาคม", path:'/member' , onClick: () => navigate("/member") },
-    // แสดงปุ่มเข้าสู่ระบบถ้าไม่ได้ล็อกอิน
-    ...(!currUser ? [{ name: "เข้าสู่ระบบ", onClick: () => navigate("/login") }] : []),
+    { name: "หน้าแรก", path : '/admin', onClick: () => navigate("/admin") },
+    { name: "จัดการสมาคม", path: '/admin/member' ,  onClick: () => navigate("/admin/member") },
+    { name: "ออกจากระบบ", onClick: handleLogout },
   ];
 
   return (
-    <nav className="w-full bg-white shadow-md">
+    <nav className="w-full bg-white ">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <div
-          onClick={() => navigate("/")}
-          className="text-2xl font-bold text-gray-800 cursor-pointer hover:text-blue-500 transition-colors"
+          onClick={() => navigate("/admin")}
+          className="text-xl  text-gray-800 cursor-pointer hover:text-blue-500 transition-colors"
         >
-          KU ART&SCI
+          KU ART&SCI (Admin {user.email})
         </div>
-
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
           {menuItems.map((item) => (
             <div
               key={item.name}
               onClick={item.onClick}
-              className={`text-gray-700 font-medium cursor-pointer hover:text-blue-500 transition-colors 
+              className={`text-gray-700 cursor-pointer hover:text-blue-500 transition-colors 
                 ${location.pathname === item.path ?  'underline underline-offset-8' : ''}`}
             >
               {item.name}
@@ -58,18 +60,18 @@ export default function UserNavbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-md">
+        <div className="md:hidden bg-white shadow-sm">
           <div className="flex flex-col px-4 py-2 space-y-2">
             {menuItems.map((item) => (
               <div
                 key={item.name}
                 onClick={() => {
                   item.onClick();
-                  setIsOpen(false);
+                  setIsOpen(false); // ปิดเมนูหลังคลิก
                 }}
-                className={`text-gray-700 font-medium cursor-pointer hover:text-blue-500 transition-colors 
+                className={`text-gray-700  cursor-pointer hover:text-blue-500 transition-colors 
                 ${location.pathname === item.path ?  'underline underline-offset-8' : ''}`}
-              >
+                >
                 {item.name}
               </div>
             ))}

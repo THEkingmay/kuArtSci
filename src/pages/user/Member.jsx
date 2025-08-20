@@ -1,12 +1,13 @@
-import UserNavbar from "../../components/UserNav"
+import UserNavbar from "../../components/user/UserNav"
+import RegisterMemberForm from "../../components/user/RegisterMemberForm"
 
 export default function UserMember(){
     return(
-        <div>
-            <UserNavbar/>
-            <div className="text-center">
-                สมัครสมาคมศิษย์เก่า
-          </div>
+        <>
+        <UserNavbar/>
+        <div className="container mx-auto">
+            <RegisterMemberForm/>
         </div>
+        </>
     )
 }
