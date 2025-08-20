@@ -1,7 +1,12 @@
+import UserNavbar from "../../components/UserNav"
+
 export default function UserHome(){
     return(
         <div>
-            THIS IS USER HOME
+            <UserNavbar/>
+          <div className="text-center">
+            หน้าแสดงกิจกรรมฝั่งผู้ใช้
+          </div>
         </div>
     )
 }

@@ -1,7 +1,13 @@
+import AdminNavbar from "../../components/AdminNav"
+
+
 export default function AdminMember(){
     return(
         <div>
-            THIS IS ADMIN MEMBER
+            <AdminNavbar/>
+            <div className="text-center">
+                หน้าจัดการการสมัครเข้าร่วมสมาคมฝั่งแอดมิน
+            </div>
         </div>
     )
 }

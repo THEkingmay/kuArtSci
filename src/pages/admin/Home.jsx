@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom"
+import AdminNavbar from "../../components/AdminNav"
+
 export default function AdminHome(){
     const navigate = useNavigate()
     return(
         <div>
-            THIS IS ADMIN HOME
-            <button onClick={()=>{navigate('/admin/member')}}>to member</button>
-            <button onClick={()=>{navigate('/')}}>test</button>
+            <AdminNavbar/>
+            <div className="text-center">
+                หน้าจัดการกิจกรรมฝั่งแอดมิน
+            </div>
         </div>
     )
 }

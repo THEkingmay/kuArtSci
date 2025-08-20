@@ -1,7 +1,12 @@
+import UserNavbar from "../../components/UserNav"
+
 export default function UserMember(){
     return(
         <div>
-            THIS IS USER MEMBER
+            <UserNavbar/>
+            <div className="text-center">
+                สมัครสมาคมศิษย์เก่า
+          </div>
         </div>
     )
 }

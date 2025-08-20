@@ -9,7 +9,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       await login();
-      // หลัง login แล้ว เราจะให้ useEffect จัดการ redirect เอง
+      // หลัง login แล้ว เราจะให้ useEffect จัดการ redirect เอง 
     } catch (err) {
       console.log(err);
     }
@@ -19,9 +19,9 @@ export default function LoginPage() {
     if (!user) return; // ยังไม่ได้ login
 
     if (user.role === "admin") {
-      navigate("/admin/home", { replace: true });
+      navigate("/admin", { replace: true });
     } else if (user.role === "user") {
-      navigate("/home", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [user, navigate]); // <-- จะทำงานทุกครั้งที่ user เปลี่ยนค่า
 
@@ -29,6 +29,9 @@ export default function LoginPage() {
     <div>
       LOGIN
       <button onClick={handleLogin}>login</button>
+      <div>
+        <button onClick={()=>navigate('/')}>ดำเนินการโดยไม่ล็อกอิน</button>
+      </div>
     </div>
   );
 }
