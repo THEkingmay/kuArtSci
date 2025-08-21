@@ -6,8 +6,8 @@ export default function AdminHome(){
     return(
         <>
         <AdminNavbar/>
-        <div className="container mx-auto">
-            <div className="text-center">
+        <div className="container mx-auto mt-6">
+            <div className="text-center text-2xl font-bold underline">
                 หน้าจัดการกิจกรรมฝั่งแอดมิน
             </div>
         </div>

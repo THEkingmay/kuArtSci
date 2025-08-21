@@ -5,8 +5,8 @@ export default function AdminMember(){
     return(
     <>
         <AdminNavbar/>
-        <div className="container mx-auto p-5">
-            <div className="text-center">
+        <div className="container mx-auto px-5 mt-6">
+            <div className="text-2xl font-bold underline text-center ">
                 หน้าจัดการการสมัครเข้าร่วมสมาคมศิษย์เก่า
             </div>
             <div>

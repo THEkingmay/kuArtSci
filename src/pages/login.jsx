@@ -16,8 +16,9 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
+          if(email =='' || password =='') throw new Error('กรุณากรอกอีเมลและรหัสผ่าน')
+
       await login(email, password);
     } catch (err) {
       setError(err.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
@@ -101,7 +102,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 mt-2 rounded-lg text-white font-medium ${
+            className={`w-full cursor-pointer py-2 mt-2 rounded-lg text-white font-medium ${
               loading
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-gray-800 hover:bg-gray-700"
@@ -114,8 +115,8 @@ export default function LoginPage() {
         {/* ลิงก์รีเซ็ตรหัสผ่าน */}
         <button
           onClick={handleResetPassword}
-          className="mt-3 text-sm text-gray-600 hover:text-gray-800 underline"
-          disabled={loading}
+          className="mt-3 text-sm text-gray-600 hover:text-gray-800 underline cursor-pointer"
+          disabled={loading} 
         >
           ลืมรหัสผ่าน? กดที่นี่เพื่อรีเซ็ต
         </button>
@@ -124,7 +125,7 @@ export default function LoginPage() {
         <div className="mt-6 text-sm">
           <button
             onClick={() => navigate("/")}
-            className="w-full py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+            className="w-full py-2 rounded-lg border cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-100 transition"
           >
             ดำเนินการโดยไม่ล็อกอิน
           </button>

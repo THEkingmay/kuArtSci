@@ -14,8 +14,6 @@ export default function AuthContextProvider({children}){
 
     const login = async (email , password) =>{
         // login here
-        setUser({email : 'test.com' , role : 'admin'})
-
         // จัดเก็บ token JWT ด้วย
     }
 
