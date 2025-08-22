@@ -220,7 +220,7 @@ useEffect(() => {
       homeZipcode,
     } = formData;
 
-    return `เลขที่ ${homeNo} หมู่ ${homeVillageNo} หมู่บ้าน ${homeVillageName} ซ.${homeAlley} ถ.${homeStreet} ต.${homeSubdistrict} อ.${homeDistrict} จ.${homeProvince} ${homeZipcode}`;
+    return `เลขที่ ${homeNo} หมู่ ${homeVillageNo} หมู่บ้าน ${homeVillageName} ซ.${homeAlley} ถ.${homeStreet} ต./แขวง${homeSubdistrict} อ./เขต${homeDistrict} จ.${homeProvince} ${homeZipcode}`;
   };
 
   const getFullWorkAddress = () => {
@@ -236,7 +236,7 @@ useEffect(() => {
       workZipcode,
     } = formData;
 
-    return `เลขที่ ${workNo} หมู่ ${workVillageNo} หมู่บ้าน ${workVillageName} ซ.${workAlley} ถ.${workStreet} ต.${workSubdistrict} อ.${workDistrict} จ.${workProvince} ${workZipcode}`;
+    return `เลขที่ ${workNo} หมู่ ${workVillageNo} หมู่บ้าน ${workVillageName} ซ.${workAlley} ถ.${workStreet} ต.แขวง${workSubdistrict} อ./เขต${workDistrict} จ.${workProvince} ${workZipcode}`;
   };
 
   // เอาวันมาต่อกัน
@@ -345,7 +345,7 @@ return (
             required
             className="input-field"
           >
-            <option value="">วัน</option>
+            <option value="">วันเกิด</option>
             {days.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -366,7 +366,7 @@ return (
             required
             className="input-field"
           >
-            <option value="">เดือน</option>
+            <option value="">เดือนเกิด</option>
             {months.map((m, i) => (
               <option key={i} value={m}>
                 {m}
@@ -382,7 +382,7 @@ return (
             required
             className="input-field"
           >
-            <option value="">ปี</option>
+            <option value="">ปีเกิด</option>
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}

@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success , setSuccess] = useState(false)
 
   // ฟังก์ชันล็อกอิน
   const handleLogin = async (e) => {
@@ -17,8 +18,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-          if(email =='' || password =='') throw new Error('กรุณากรอกอีเมลและรหัสผ่าน')
-
+      if(email =='' || password =='') throw new Error('กรุณากรอกอีเมลและรหัสผ่าน')
       await login(email, password);
     } catch (err) {
       setError(err.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
@@ -37,7 +37,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await resetPassword(email);
-      alert("เราได้ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลของคุณแล้ว");
+      setSuccess('เราได้ส่งอีเมลการเปลี่ยนรหัสไปให้คุณแล้ว')
     } catch (err) {
       setError(err.message || "ไม่สามารถรีเซ็ตรหัสผ่านได้");
     } finally {
@@ -71,7 +71,12 @@ export default function LoginPage() {
             {error}
           </div>
         )}
-
+      {/* แสดง error ถ้ามี */}
+        {success && (
+          <div className="bg-green-50 border border-green-300 text-green-700 px-3 py-2 rounded mb-4 text-sm text-center">
+            {success}
+          </div>
+        )}
         {/* ฟอร์มล็อกอิน */}
         <form onSubmit={handleLogin} className="space-y-4 text-sm">
           {/* อีเมล */}

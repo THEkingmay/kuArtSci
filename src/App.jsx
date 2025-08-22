@@ -14,7 +14,7 @@ export default function App(){
                 {AdminRoute()}  
               <Route path="*" element={<Navigate to={'/'}/>}/>
             </Routes>
-        </BrowserRouter>
-    </AuthContextProvider>
+               </BrowserRouter>
+            </AuthContextProvider>
   )
 }
