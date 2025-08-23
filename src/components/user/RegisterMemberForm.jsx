@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthProvider";
+import AlertMessage from "../AlertMessage";
 
 export default function RegisterMemberForm() {
-
+  const {API_URL} = useAuth()
+  
   const [loading , setLoad] = useState(false)
-  const [error , setError] = useState('')
-  const [success , setSucces] = useState('')
+  
+  const [alert , setAlert] = useState({
+    type : '' , msg:''
+  })
  // เก็บค่าของ select วัน/เดือน/ปี ไทย
   const [selectTH_birthDate, setSelectTH_birthDate] = useState({
     day: "",
@@ -220,7 +225,7 @@ useEffect(() => {
       homeZipcode,
     } = formData;
 
-    return `เลขที่ ${homeNo} หมู่ ${homeVillageNo} หมู่บ้าน ${homeVillageName} ซ.${homeAlley} ถ.${homeStreet} ต./แขวง${homeSubdistrict} อ./เขต${homeDistrict} จ.${homeProvince} ${homeZipcode}`;
+    return `เลขที่ ${homeNo} หมู่ ${homeVillageNo} หมู่บ้าน ${homeVillageName} ซ.${homeAlley} ถ.${homeStreet} ต./แขวง.${homeSubdistrict} อ./เขต.${homeDistrict} จ.${homeProvince} รหัสไปรษณีย์ ${homeZipcode}`;
   };
 
   const getFullWorkAddress = () => {
@@ -236,7 +241,7 @@ useEffect(() => {
       workZipcode,
     } = formData;
 
-    return `เลขที่ ${workNo} หมู่ ${workVillageNo} หมู่บ้าน ${workVillageName} ซ.${workAlley} ถ.${workStreet} ต.แขวง${workSubdistrict} อ./เขต${workDistrict} จ.${workProvince} ${workZipcode}`;
+    return `เลขที่ ${workNo} หมู่ ${workVillageNo} หมู่บ้าน ${workVillageName} ซ.${workAlley} ถ.${workStreet} ต./แขวง.${workSubdistrict} อ./เขต.${workDistrict} จ.${workProvince} รหัสไปรษณีย์${workZipcode}`;
   };
 
   // เอาวันมาต่อกัน
@@ -245,9 +250,9 @@ useEffect(() => {
   }
   // 🟢 เมื่อส่งฟอร์ม
   const handleSubmit = async (e) => {
+     e.preventDefault();
     try{
-        setLoad(true)
-          e.preventDefault();
+        setLoad(true);
           // รวมที่อยู่บ้านและที่อยู่ที่ทำงาน
           const fullHomeAddress = getFullHomeAddress();
           const fullWorkAddress = getFullWorkAddress();
@@ -269,22 +274,22 @@ useEffect(() => {
 
             // การศึกษา: ปริญญาตรี
             bachelor_degree_major: formData.bachelor_degree_major || null,
-            bachelor_degree_KU_batch: parseInt(formData.bachelor_degree_KU_batch) || null,
-            bachelor_degree_AS_batch: parseInt(formData.bachelor_degree_AS_batch) || null,
+            bachelor_degree_ku_batch: parseInt(formData.bachelor_degree_KU_batch) || null,
+            bachelor_degree_as_batch: parseInt(formData.bachelor_degree_AS_batch) || null,
             bachelor_degree_start_year: parseInt(formData.bachelor_degree_start_yaer) || null, 
             bachelor_degree_end_year: parseInt(formData.bachelor_degree_end_yaer) || null,
 
             // ปริญญาโท
             master_degree_major: formData.master_degree_major || null,
-            master_degree_KU_batch: parseInt(formData.master_degree_KU_batch) || null,
-            master_degree_AS_batch: parseInt(formData.master_degree_AS_batch) || null,
+            master_degree_ku_batch: parseInt(formData.master_degree_KU_batch) || null,
+            master_degree_as_batch: parseInt(formData.master_degree_AS_batch) || null,
             master_degree_start_year: parseInt(formData.master_degree_start_yaer) || null,
             master_degree_end_year: parseInt(formData.master_degree_end_yaer) || null,
 
             // ปริญญาเอก
             doctoral_degree_major: formData.doctoral_degree_major || null,
-            doctoral_degree_KU_batch: parseInt(formData.doctoral_degree_KU_batch) || null,
-            doctoral_degree_AS_batch: parseInt(formData.doctoral_degree_AS_batch) || null,
+            doctoral_degree_ku_batch: parseInt(formData.doctoral_degree_KU_batch) || null,
+            doctoral_degree_as_batch: parseInt(formData.doctoral_degree_AS_batch) || null,
             doctoral_degree_start_year: parseInt(formData.doctoral_degree_start_yaer) || null,
             doctoral_degree_end_year: parseInt(formData.doctoral_degree_end_yaer) || null,
             
@@ -301,21 +306,28 @@ useEffect(() => {
             // 🟢 ประเภทสมาชิก
             member_type: formData.member_type,
           };
+          try{
+            const res= await fetch(`${API_URL}/member/register` , {
+              method : 'post' ,
+              headers : {
+                 "Content-Type": "application/json",
+              },
+              body : JSON.stringify(payload)
+            })
+            const data = await res.json()
+            if(!res.ok) throw new Error(data.message)
+            setAlert({type : 'success' , msg : 'บันทึกการสมัครเรียบร้อย'})
+            resetForm()
+          }catch(err){
+            setError(err.message)
+            setAlert({type : 'error' , msg : err.message})
+          }finally{
+            setLoad(false)
+          }
 
-          console.log("📌 ส่งข้อมูล:", payload);
-          alert("บันทึกข้อมูลสำเร็จ! 🎉");
-          // TODO: เรียก API POST -> /member_registrations
-          resetForm()
-          setSucces(true)
     }catch(err){
       console.log(err)
       setError(err)
-    }finally{
-      setTimeout(()=>{
-        setSucces("")
-        setError("")
-      },2000)
-      setLoad(true)
     }
   };
 return (
@@ -731,20 +743,13 @@ return (
       {memberTypeSelect.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
     </select>
   </section>
-      {/* แสดง error ถ้ามี */}
-    {error && (
-      <div className="bg-red-50 border border-red-300 text-red-700 px-3 py-2 rounded mb-4 text-md text-center">
-        ! เกิดข้อผิดพลาดในการสมัคร {error}
-      </div>
-    )}
-    {success && (
-        <div className="bg-green-50 border border-green-300 text-green-700 px-3 py-2 rounded mb-4 text-md text-center">
-        การสมัครสำเร็จ
-      </div>
-    )}
-  {/* ปุ่ม submit */}
+
+{/* แจ้งเตือน */}
+  {alert.msg && <AlertMessage type={alert.type} msg={alert.msg} clear={() => setAlert({ type: "", msg: "" })}/>}
   <div className="text-center mt-6">
-    <button type="submit" className="cursor-pointer bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-transform duration-200">
+    <button
+    disabled={loading}
+     type="submit" className="cursor-pointer bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-transform duration-200">
      {loading ? 'กำลังส่งแบบสมัคร...' : 'ส่งแบบมัคร'}
     </button>
   </div>

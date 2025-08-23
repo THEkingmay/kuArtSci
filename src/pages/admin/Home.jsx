@@ -7,9 +7,9 @@ export default function AdminHome(){
         <>
         <AdminNavbar/>
         <div className="container mx-auto mt-6">
-            <div className="text-center text-2xl font-bold underline">
-                หน้าจัดการกิจกรรมฝั่งแอดมิน
-            </div>
+             <div className="text-3xl  text-center underline text-gray-800 mb-6">
+                หน้าจัดการกิจกรรมข่าวสาร
+                </div>
         </div>
         </>
     )

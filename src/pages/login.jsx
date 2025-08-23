@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import AlertMessage from "../components/AlertMessage";
 
 export default function LoginPage() {
   const { login, resetPassword, user } = useAuth();
@@ -9,19 +10,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success , setSuccess] = useState(false)
+  const [alert, setAlert] = useState({ type: "", msg: "" });
 
   // ฟังก์ชันล็อกอิน
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
     try {
-      if(email =='' || password =='') throw new Error('กรุณากรอกอีเมลและรหัสผ่าน')
+      if (!email || !password) throw new Error("กรุณากรอกอีเมลและรหัสผ่าน");
       await login(email, password);
     } catch (err) {
-      setError(err.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+      setAlert({ type: "error", msg: err.message || "ล็อกอินผิดพลาด" });
     } finally {
       setLoading(false);
     }
@@ -30,16 +29,21 @@ export default function LoginPage() {
   // ฟังก์ชันรีเซ็ตรหัสผ่าน
   const handleResetPassword = async () => {
     if (!email) {
-      setError("กรุณากรอกอีเมลก่อนรีเซ็ตรหัสผ่าน");
+      setAlert({ type: "error", msg: "กรุณากรอกอีเมลเพื่อรีเซ็ตรหัสผ่าน" });
       return;
     }
-    setError("");
     setLoading(true);
     try {
       await resetPassword(email);
-      setSuccess('เราได้ส่งอีเมลการเปลี่ยนรหัสไปให้คุณแล้ว')
+      setAlert({
+        type: "success",
+        msg: "เราได้ส่งอีเมลการเปลี่ยนรหัสไปให้คุณแล้ว",
+      });
     } catch (err) {
-      setError(err.message || "ไม่สามารถรีเซ็ตรหัสผ่านได้");
+      setAlert({
+        type: "error",
+        msg: err.message || "ไม่สามารถรีเซ็ตรหัสผ่านได้",
+      });
     } finally {
       setLoading(false);
     }
@@ -57,26 +61,25 @@ export default function LoginPage() {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 text-sm">
-      <div className="bg-white p-8 rounded-xl shadow  border border-gray-200 w-full max-w-md">
+    <>
+    {/* Alert */}
+      {alert.msg && (
+        <AlertMessage
+          type={alert.type}
+          msg={alert.msg}
+          clear={() => setAlert({ type: "", msg: "" })}
+        />
+      )}
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="bg-white p-10 rounded-xl shadow border border-gray-200 w-full max-w-md">
         {/* หัวข้อ */}
-        <h1 className="text-xl font-semibold text-center text-gray-800">เข้าสู่ระบบ</h1>
-        <p className="text-sm text-gray-500 text-center mt-1 mb-6">
+        <h1 className="text-2xl font-semibold text-center text-gray-800">
+          เข้าสู่ระบบ
+        </h1>
+        <p className="text-md text-gray-500 text-center mt-1 mb-6">
           กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ
         </p>
 
-        {/* แสดง error ถ้ามี */}
-        {error && (
-          <div className="bg-red-50 border border-red-300 text-red-700 px-3 py-2 rounded mb-4 text-sm text-center">
-            {error}
-          </div>
-        )}
-      {/* แสดง error ถ้ามี */}
-        {success && (
-          <div className="bg-green-50 border border-green-300 text-green-700 px-3 py-2 rounded mb-4 text-sm text-center">
-            {success}
-          </div>
-        )}
         {/* ฟอร์มล็อกอิน */}
         <form onSubmit={handleLogin} className="space-y-4 text-sm">
           {/* อีเมล */}
@@ -121,7 +124,7 @@ export default function LoginPage() {
         <button
           onClick={handleResetPassword}
           className="mt-3 text-sm text-gray-600 hover:text-gray-800 underline cursor-pointer"
-          disabled={loading} 
+          disabled={loading}
         >
           ลืมรหัสผ่าน? กดที่นี่เพื่อรีเซ็ต
         </button>
@@ -137,5 +140,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
