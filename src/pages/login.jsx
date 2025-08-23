@@ -121,13 +121,13 @@ export default function LoginPage() {
         </form>
 
         {/* ลิงก์รีเซ็ตรหัสผ่าน */}
-        <button
+        {/* <button
           onClick={handleResetPassword}
           className="mt-3 text-sm text-gray-600 hover:text-gray-800 underline cursor-pointer"
           disabled={loading}
         >
           ลืมรหัสผ่าน? กดที่นี่เพื่อรีเซ็ต
-        </button>
+        </button> */}
 
         {/* ปุ่มไปหน้าแรกโดยไม่ล็อกอิน */}
         <div className="mt-6 text-sm">
