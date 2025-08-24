@@ -14,7 +14,7 @@ export default function AdminHome() {
                 </h1>
 
                 {/* กล่องเมนูหลัก */}
-                <div className="flex justify-center">
+                <div className="flex justify-center px-5">
                     <div
                         onClick={() => navigate("/admin/member")}
                         className="bg-white border border-gray-300 rounded-xl shadow-md p-6 w-[500px] 
