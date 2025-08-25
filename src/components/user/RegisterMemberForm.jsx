@@ -100,6 +100,7 @@ export default function RegisterMemberForm() {
 
     // 🟢 ประเภทสมาชิก
     member_type: "",
+    slip :""
   };
 
 const prefixSelect = [
@@ -129,6 +130,8 @@ const memberTypeSelect = [
     setSelectTH_birthDate({
       day:"" , month :"" , year:""
     })
+    const id = document.getElementById('slipInput')
+    id.value=''
   };
 
 useEffect(()=>{ // ถ้าเปลี่ยนคำนำหน้าไปมา ให้ลบคำนำหน้าที่เขียนเอง
@@ -170,39 +173,85 @@ useEffect(() => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+const handleChangeFile = (e) => {
+  const { name, files } = e.target;
+  if(files && files.length > 0){
+    setFormData(prev => ({ ...prev, [name]: files[0] })); // เก็บ File object ตัวแรก
+  }
+};
 
-  // 🟢 รวมที่อยู่เป็นสตริงเดียว ก่อนส่ง API
-  const getFullHomeAddress = () => {
-    const {
-      homeNo,
-      homeVillageNo,
-      homeVillageName,
-      homeAlley,
-      homeStreet,
-      homeSubdistrict,
-      homeDistrict,
-      homeProvince,
-      homeZipcode,
-    } = formData;
 
-    return `เลขที่ ${homeNo} หมู่ ${homeVillageNo} หมู่บ้าน ${homeVillageName} ซ.${homeAlley} ถ.${homeStreet} ต./แขวง.${homeSubdistrict} อ./เขต.${homeDistrict} จ.${homeProvince} รหัสไปรษณีย์ ${homeZipcode}`;
+// 🟢 ฟังก์ชันช่วยต่อที่อยู่แบบมีค่าเท่านั้น
+const formatAddress = (fields) => {
+  return Object.entries(fields)
+    .filter(([_, value]) => value !== null && value !== undefined && value !== '') // มีค่าเท่านั้น
+    .map(([key, value]) => {
+      switch (key) {
+        case 'homeNo':
+        case 'workNo':
+          return `เลขที่ ${value}`;
+        case 'homeVillageNo':
+        case 'workVillageNo':
+          return `หมู่ ${value}`;
+        case 'homeVillageName':
+        case 'workVillageName':
+          return `หมู่บ้าน ${value}`;
+        case 'homeAlley':
+        case 'workAlley':
+          return `ซ.${value}`;
+        case 'homeStreet':
+        case 'workStreet':
+          return `ถ.${value}`;
+        case 'homeSubdistrict':
+        case 'workSubdistrict':
+          return `ต./แขวง.${value}`;
+        case 'homeDistrict':
+        case 'workDistrict':
+          return `อ./เขต.${value}`;
+        case 'homeProvince':
+        case 'workProvince':
+          return `จ.${value}`;
+        case 'homeZipcode':
+        case 'workZipcode':
+          return `รหัสไปรษณีย์ ${value}`;
+        default:
+          return value;
+      }
+    })
+    .join(' ');
+};
+
+// ใช้กับบ้าน
+const getFullHomeAddress = () => {
+  const homeFields = {
+    homeNo: formData.homeNo,
+    homeVillageNo: formData.homeVillageNo,
+    homeVillageName: formData.homeVillageName,
+    homeAlley: formData.homeAlley,
+    homeStreet: formData.homeStreet,
+    homeSubdistrict: formData.homeSubdistrict,
+    homeDistrict: formData.homeDistrict,
+    homeProvince: formData.homeProvince,
+    homeZipcode: formData.homeZipcode,
   };
+  return formatAddress(homeFields);
+};
 
-  const getFullWorkAddress = () => {
-    const {
-      workNo,
-      workVillageNo,
-      workVillageName,
-      workAlley,
-      workStreet,
-      workSubdistrict,
-      workDistrict,
-      workProvince,
-      workZipcode,
-    } = formData;
-
-    return `เลขที่ ${workNo} หมู่ ${workVillageNo} หมู่บ้าน ${workVillageName} ซ.${workAlley} ถ.${workStreet} ต./แขวง.${workSubdistrict} อ./เขต.${workDistrict} จ.${workProvince} รหัสไปรษณีย์${workZipcode}`;
+// ใช้กับที่ทำงาน
+const getFullWorkAddress = () => {
+  const workFields = {
+    workNo: formData.workNo,
+    workVillageNo: formData.workVillageNo,
+    workVillageName: formData.workVillageName,
+    workAlley: formData.workAlley,
+    workStreet: formData.workStreet,
+    workSubdistrict: formData.workSubdistrict,
+    workDistrict: formData.workDistrict,
+    workProvince: formData.workProvince,
+    workZipcode: formData.workZipcode,
   };
+  return formatAddress(workFields);
+};
 
   // เอาวันมาต่อกัน
   const formatBD = ()=>{
@@ -211,6 +260,7 @@ useEffect(() => {
   // 🟢 เมื่อส่งฟอร์ม
   const handleSubmit = async (e) => {
      e.preventDefault();
+     
     try{
         setLoad(true);
           // รวมที่อยู่บ้านและที่อยู่ที่ทำงาน
@@ -268,14 +318,17 @@ useEffect(() => {
 
             // 🟢 ประเภทสมาชิก
             member_type: formData.member_type,
+            slip : formData.slip
           };
+          console.log(payload)
+          const formDataToSend = new FormData()
+          for (const key in payload) {
+              formDataToSend.append(key, formData[key]);
+          }
           try{
             const res= await fetch(`${API_URL}/member/register` , {
               method : 'post' ,
-              headers : {
-                 "Content-Type": "application/json",
-              },
-              body : JSON.stringify(payload)
+              body : formDataToSend // ไม่ต้องเขียน contenttype  เพราะใช้ new FormData()
             })
             const data = await res.json()
             if(!res.ok) throw new Error(data.message)
@@ -286,6 +339,7 @@ useEffect(() => {
           }finally{
             setLoad(false)
           }
+          resetForm()
 
     }catch(err){
       console.log(err)
@@ -299,14 +353,14 @@ return (
   <section className="space-y-4">
     <h2 className="text-2xl font-semibold border-b pb-2">ข้อมูลส่วนตัว</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input type="text" name="student_id" required placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
-      <select required name="prefix" value={formData.prefix} onChange={handleChange} className="input-field">
+      <input type="text" name="student_id"  placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
+      <select  name="prefix" value={formData.prefix} onChange={handleChange} className="input-field">
         <option value="">เลือกคำนำหน้า</option>
         {prefixSelect.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
       </select>
-      {formData.prefix === "อื่นๆ" && <input type="text" required name="custom_prefix" placeholder="ระบุคำนำหน้า" value={formData.custom_prefix} onChange={handleChange} className="input-field"/>}
-      <input type="text" name="first_name" placeholder="ชื่อ" required value={formData.first_name} onChange={handleChange} className="input-field"/>
-      <input type="text" name="last_name" placeholder="นามสกุล" required value={formData.last_name} onChange={handleChange} className="input-field"/>
+      {formData.prefix === "อื่นๆ" && <input type="text"  name="custom_prefix" placeholder="ระบุคำนำหน้า" value={formData.custom_prefix} onChange={handleChange} className="input-field"/>}
+      <input type="text" name="first_name" placeholder="ชื่อ"  value={formData.first_name} onChange={handleChange} className="input-field"/>
+      <input type="text" name="last_name" placeholder="นามสกุล"  value={formData.last_name} onChange={handleChange} className="input-field"/>
       <input type="text" name="old_fname" placeholder="ชื่อเดิม" value={formData.old_fname} onChange={handleChange} className="input-field"/>
       <input type="text" name="old_lname" placeholder="นามสกุลเดิม" value={formData.old_lname} onChange={handleChange} className="input-field"/>
        {/* วันเกิดแบบไทย */}
@@ -316,7 +370,7 @@ return (
             name="day"
             value={selectTH_birthDate.day}
             onChange={handleBirthDateChange}
-            required
+            
             className="input-field"
           >
             <option value="">วันเกิด</option>
@@ -337,7 +391,7 @@ return (
                 month:e.target.value,
               }))
             }
-            required
+            
             className="input-field"
           >
             <option value="">เดือนเกิด</option>
@@ -353,7 +407,7 @@ return (
             name="year"
             value={selectTH_birthDate.year}
             onChange={handleBirthDateChange}
-            required
+            
             className="input-field"
           >
             <option value="">ปีเกิด</option>
@@ -364,10 +418,10 @@ return (
             ))}
           </select>
         </div>
-      <input type="number" name="age" required placeholder="อายุ" min={1} value={formData.age} onChange={handleChange} className="input-field"/>
-      <input type="text" name="nationality" required placeholder="สัญชาติ" value={formData.nationality} onChange={handleChange} className="input-field"/>
-      <input type="text" name="race" required placeholder="เชื้อชาติ" value={formData.race} onChange={handleChange} className="input-field"/>
-      <input type="text" name="religion" required placeholder="ศาสนา" value={formData.religion} onChange={handleChange} className="input-field"/>
+      <input type="number" name="age"  placeholder="อายุ" min={1} value={formData.age} onChange={handleChange} className="input-field"/>
+      <input type="text" name="nationality"  placeholder="สัญชาติ" value={formData.nationality} onChange={handleChange} className="input-field"/>
+      <input type="text" name="race"  placeholder="เชื้อชาติ" value={formData.race} onChange={handleChange} className="input-field"/>
+      <input type="text" name="religion"  placeholder="ศาสนา" value={formData.religion} onChange={handleChange} className="input-field"/>
     </div>
   </section>
 
@@ -378,7 +432,6 @@ return (
     <input
       type="text"
       name="bachelor_degree"
-      required
       placeholder="หลักสูตร"
       value={formData.bachelor_degree}
       onChange={handleChange}
@@ -387,41 +440,34 @@ return (
     <input
       type="text"
       name="bachelor_degree_major"
-      required
       placeholder="สาขา"
       value={formData.bachelor_degree_major}
       onChange={handleChange}
       className={`input-field`}
-      disabled={!formData.bachelor_degree}
     />
 
     <input
       type="number"
-      required
       name="bachelor_degree_KU_batch"
       min={1}
       placeholder="รุ่น KU"
       value={formData.bachelor_degree_KU_batch}
       onChange={handleChange}
       className={`input-field`}
-      disabled={!formData.bachelor_degree}
     />
 
     <input
       type="number"
-      required
       name="bachelor_degree_AS_batch"
       min={1}
       placeholder="รุ่น ศวท."
       value={formData.bachelor_degree_AS_batch}
       onChange={handleChange}
       className={`input-field`}
-      disabled={!formData.bachelor_degree}
     />
 
     <input
       type="number"
-      required
       name="bachelor_degree_start_yaer"
       min={2400}
       max={3000}
@@ -429,12 +475,11 @@ return (
       value={formData.bachelor_degree_start_yaer}
       onChange={handleChange}
       className={`input-field`}
-      disabled={!formData.bachelor_degree}
     />
 
     <input
       type="number"
-      required
+      
       name="bachelor_degree_end_yaer"
       min={2400}
       max={3000}
@@ -442,7 +487,6 @@ return (
       value={formData.bachelor_degree_end_yaer}
       onChange={handleChange}
       className={`input-field`}
-      disabled={!formData.bachelor_degree}
     />
   </div>
 </section>
@@ -465,8 +509,7 @@ return (
       placeholder="สาขา"
       value={formData.master_degree_major}
       onChange={handleChange}
-      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
-      disabled={!formData.master_degree}
+      className={`input-field`}
     />
 
     <input
@@ -476,8 +519,7 @@ return (
       placeholder="รุ่น KU"
       value={formData.master_degree_KU_batch}
       onChange={handleChange}
-      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
-      disabled={!formData.master_degree}
+      className={`input-field`}
     />
 
     <input
@@ -487,8 +529,7 @@ return (
       placeholder="รุ่น ศวท."
       value={formData.master_degree_AS_batch}
       onChange={handleChange}
-      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
-      disabled={!formData.master_degree}
+      className={`input-field`}
     />
 
     <input
@@ -499,8 +540,7 @@ return (
       placeholder="ปีเริ่ม (พ.ศ.)"
       value={formData.master_degree_start_yaer}
       onChange={handleChange}
-      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
-      disabled={!formData.master_degree}
+      className={`input-field`}
     />
 
     <input
@@ -511,8 +551,7 @@ return (
       placeholder="ปีจบ (พ.ศ.)"
       value={formData.master_degree_end_yaer}
       onChange={handleChange}
-      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
-      disabled={!formData.master_degree}
+      className={`input-field`}
     />
   </div>
 </section>
@@ -535,8 +574,7 @@ return (
       placeholder="สาขา"
       value={formData.doctoral_degree_major}
       onChange={handleChange}
-      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
-      disabled={!formData.doctoral_degree}
+      className={`input-field`}
     />
 
     <input
@@ -546,8 +584,7 @@ return (
       placeholder="รุ่น KU"
       value={formData.doctoral_degree_KU_batch}
       onChange={handleChange}
-      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
-      disabled={!formData.doctoral_degree}
+      className={`input-field`}
     />
 
     <input
@@ -557,8 +594,7 @@ return (
       placeholder="รุ่น ศวท."
       value={formData.doctoral_degree_AS_batch}
       onChange={handleChange}
-      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
-      disabled={!formData.doctoral_degree}
+      className={`input-field`}
     />
 
     <input
@@ -569,8 +605,7 @@ return (
       placeholder="ปีเริ่ม (พ.ศ.)"
       value={formData.doctoral_degree_start_yaer}
       onChange={handleChange}
-      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
-      disabled={!formData.doctoral_degree}
+      className={`input-field`}
     />
 
     <input
@@ -581,8 +616,7 @@ return (
       placeholder="ปีจบ (พ.ศ.)"
       value={formData.doctoral_degree_end_yaer}
       onChange={handleChange}
-      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
-      disabled={!formData.doctoral_degree}
+      className={`input-field`}
     />
   </div>
 </section>
@@ -594,15 +628,15 @@ return (
   <section className="space-y-4">
     <h2 className="text-2xl font-semibold border-b pb-2">ที่อยู่ปัจจุบัน</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input required type="text" name="homeNo" placeholder="บ้านเลขที่" value={formData.homeNo} onChange={handleChange} className="input-field"/>
+      <input  type="text" name="homeNo" placeholder="บ้านเลขที่" value={formData.homeNo} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeVillageNo" placeholder="หมู่" value={formData.homeVillageNo} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeVillageName" placeholder="หมู่บ้าน" value={formData.homeVillageName} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeAlley" placeholder="ซอย" value={formData.homeAlley} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeStreet" placeholder="ถนน" value={formData.homeStreet} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeSubdistrict" placeholder="ตำบล/แขวง" value={formData.homeSubdistrict} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeDistrict" placeholder="อำเภอ/เขต" value={formData.homeDistrict} onChange={handleChange} className="input-field"/>
-      <input required type="text" name="homeProvince" placeholder="จังหวัด" value={formData.homeProvince} onChange={handleChange} className="input-field"/>
-      <input required type="text" name="homeZipcode" placeholder="รหัสไปรษณีย์" value={formData.homeZipcode} onChange={handleChange} className="input-field"/>
+      <input  type="text" name="homeProvince" placeholder="จังหวัด" value={formData.homeProvince} onChange={handleChange} className="input-field"/>
+      <input  type="text" name="homeZipcode" placeholder="รหัสไปรษณีย์" value={formData.homeZipcode} onChange={handleChange} className="input-field"/>
       <input type="text" name="homePhone" placeholder="เบอร์โทรบ้าน" value={formData.homePhone} onChange={handleChange} className="input-field"/>
     </div>
   </section>
@@ -707,25 +741,82 @@ return (
   <section className="space-y-4">
     <h2 className="text-2xl font-semibold border-b pb-2">ช่องทางติดต่อ</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <select required name="contact_preference" value={formData.contact_preference} onChange={handleChange} className="input-field">
+      <select  name="contact_preference" value={formData.contact_preference} onChange={handleChange} className="input-field">
         <option value="">ช่องทางติดต่อหลัก</option>
         {contactPreferenceSelect.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
       </select>
-      <input required type="text" name="phone_number" placeholder="เบอร์มือถือ" value={formData.phone_number} onChange={handleChange} className="input-field"/>
-      <input required type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
+      <input  type="text" name="phone_number" placeholder="เบอร์มือถือ" value={formData.phone_number} onChange={handleChange} className="input-field"/>
+      <input  type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
       <input type="text" name="line_id" placeholder="Line ID" value={formData.line_id} onChange={handleChange} className="input-field"/>
       <input type="text" name="facebook" placeholder="Facebook" value={formData.facebook} onChange={handleChange} className="input-field"/>
     </div>
   </section>
 
-  {/* ประเภทสมาชิก */}
-  <section className="space-y-4">
-    <h2 className="text-2xl font-semibold border-b pb-2">ประเภทสมาชิก</h2>
-    <select required name="member_type" value={formData.member_type} onChange={handleChange} className="input-field">
-      <option value="">เลือกประเภทสมาชิก</option>
-      {memberTypeSelect.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
-    </select>
-  </section>
+{/* ประเภทสมาชิก */}
+<section className="space-y-4">
+  <h2 className="text-2xl font-semibold border-b pb-2">ประเภทสมาชิก</h2>
+
+  {/* กล่องรายละเอียดประเภทสมาชิก */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {/* สมาชิกสามัญ */}
+    <div className="p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition">
+      <h3 className="text-lg font-semibold text-blue-700">สมาชิกสามัญ ประเภทที่ 1</h3>
+      <p className="text-gray-600 mt-2">
+        <span className="font-medium">คุณสมบัติ:</span>บุคคลที่สำเร็จการศีกษามาไม่เกิน 1 ปีการศึกษา นับจากวันที่สำเร็จการศึกษาจนถึงวันที่สมัครเป็นสมาชิก<br />
+        <span className="font-medium">ค่าลงทะเบียน:</span> 100 บาท<br />
+        <span className="font-medium">ระยะเวลาการเป็นสมาชิก:</span>ตลอดชีพ
+      </p>
+    </div>
+
+    {/* สมาชิกวิสามัญ */}
+    <div className="p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition">
+      <h3 className="text-lg font-semibold text-green-700">สมาชิกสามัญ ประเภทที่ 2</h3>
+      <p className="text-gray-600 mt-2">
+        <span className="font-medium">คุณสมบัติ:</span>บุคคลที่สำเร็จการศีกษามาไม่เกิน 1 ปีการศึกษา นับจากวันที่สำเร็จการศึกษาจนถึงวันที่สมัครเป็นสมาชิก<br />
+        <span className="font-medium">ค่าลงทะเบียน:</span> 300 บาท<br />
+        <span className="font-medium">ระยะเวลาการเป็นสมาชิก:</span> ตลอดชีพ
+      </p>
+    </div>
+
+    {/* สมาชิกกิตติมศักดิ์ */}
+    <div className="p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition">
+      <h3 className="text-lg font-semibold text-purple-700">สมาชิกวิสามัญ</h3>
+      <p className="text-gray-600 mt-2">
+        <span className="font-medium">คุณสมบัติ:</span>บุลคลที่เคยปฏิบัติหรือสำเร็จการศึกษาในหลักสูตรเฉพาะด้าน<br />
+        <span className="font-medium">ค่าลงทะเบียน:</span> 300 บาท<br />
+        <span className="font-medium">ระยะเวลาการเป็นสมาชิก:</span>ตลอดชีพ
+      </p>
+    </div>
+  </div>
+
+  {/* Dropdown เลือกประเภทสมาชิก */}
+  <select
+    name="member_type"
+    value={formData.member_type}
+    onChange={handleChange}
+    className="input-field mt-4"
+  >
+    <option value="">เลือกประเภทสมาชิก</option>
+    {memberTypeSelect.map((m) => (
+      <option key={m.value} value={m.value}>
+        {m.label}
+      </option>
+    ))}
+  </select>
+
+  {/* อัปโหลดสลิปโอนเงิน */}
+  <div className="flex items-center gap-4 mt-4">
+    <span className="w-1/5">เลือกรูปสลิปเงินโอน</span>
+    <input
+      type="file"
+      name="slip"
+      onChange={handleChangeFile}
+      className="input-field mt-1"
+      id="slipInput"
+    />
+  </div>
+</section>
+
 
 {/* แจ้งเตือน */}
   {alert.msg && <AlertMessage type={alert.type} msg={alert.msg} clear={() => setAlert({ type: "", msg: "" })}/>}
