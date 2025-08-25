@@ -125,16 +125,18 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
         <div className="mb-4">
           <h3 className="text-lg font-medium text-gray-700 mb-2">การศึกษา</h3>
           <div className="mb-2">
-            <p>ปริญญาตรี: {selectMember.bachelor_degree_major || "-"}</p>
+            <p>ปริญญาตรีหลักสูตร: {selectMember.bachelor_degree || "-"}</p>
+            <p>สาขา: {selectMember.bachelor_degree_major || "-"}</p>
             <p>รุ่น KU: {selectMember.bachelor_degree_ku_batch || "-"}</p>
             <p>รุ่น ศวท: {selectMember.bachelor_degree_as_batch || "-"}</p>
             <p>ปีเริ่ม: {selectMember.bachelor_degree_start_year || "-"}</p>
             <p>ปีจบ: {selectMember.bachelor_degree_end_year || "-"}</p>
           </div>
 
-          {selectMember.master_degree_major && (
+          {selectMember.master_degree && (
             <div className="mb-2">
-              <p>ปริญญาโท: {selectMember.master_degree_major}</p>
+              <p>ปริญญาโทหลักสูตร: {selectMember.master_degree}</p>
+              <p>สาขา: {selectMember.master_degree_major}</p>
               <p>รุ่น KU: {selectMember.master_degree_ku_batch || "-"}</p>
               <p>รุ่น ศวท: {selectMember.master_degree_as_batch || "-"}</p>
               <p>ปีเริ่ม: {selectMember.master_degree_start_year || "-"}</p>
@@ -142,9 +144,10 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
             </div>
           )}
 
-          {selectMember.doctoral_degree_major && (
+          {selectMember.doctoral_degree && (
             <div>
-              <p>ปริญญาเอก: {selectMember.doctoral_degree_major}</p>
+              <p>ปริญญาเอกสูตร: {selectMember.doctoral_degree}</p>
+              <p>สาขา: {selectMember.doctoral_degree_major}</p>
               <p>รุ่น KU: {selectMember.doctoral_degree_ku_batch || "-"}</p>
               <p>รุ่น ศวท: {selectMember.doctoral_degree_as_batch || "-"}</p>
               <p>ปีเริ่ม: {selectMember.doctoral_degree_start_year || "-"}</p>

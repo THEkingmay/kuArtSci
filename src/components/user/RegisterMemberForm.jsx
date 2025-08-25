@@ -43,6 +43,7 @@ export default function RegisterMemberForm() {
     religion: "",
 
     // 🟢 ปริญญาตรี
+    bachelor_degree :"" , // หลักสูตร
     bachelor_degree_major: "",
     bachelor_degree_KU_batch: "",
     bachelor_degree_AS_batch: "",
@@ -50,6 +51,7 @@ export default function RegisterMemberForm() {
     bachelor_degree_end_yaer: "",
 
     // 🟢 ปริญญาโท
+    master_degree  : "",
     master_degree_major: "",
     master_degree_KU_batch: "",
     master_degree_AS_batch: "",
@@ -57,6 +59,7 @@ export default function RegisterMemberForm() {
     master_degree_end_yaer: "",
 
     // 🟢 ปริญญาเอก
+    doctoral_degree:"",
     doctoral_degree_major: "",
     doctoral_degree_KU_batch: "",
     doctoral_degree_AS_batch: "",
@@ -106,49 +109,6 @@ const prefixSelect = [
   {value:'อื่นๆ' , label : "อื่นๆ"} ,
 ]
 
-  const bachelorSelect = [
-  { value: "บธ.บ. (การจัดการ)", label: "บธ.บ. (การจัดการ)" },
-  { value: "บธ.บ. (การจัดการ) ภาคพิเศษ", label: "บธ.บ. (การจัดการ) ภาคพิเศษ" },
-  { value: "บธ.บ. (การตลาด)", label: "บธ.บ. (การตลาด)" },
-  { value: "บธ.บ. (การตลาด) ภาคพิเศษ", label: "บธ.บ. (การตลาด) ภาคพิเศษ" },
-  { value: "บธ.บ. (การบัญชีบริหาร/การบัญชี)", label: "บธ.บ. (การบัญชีบริหาร/การบัญชี)" },
-  { value: "บธ.บ. (การบัญชีบริหาร/การบัญชี) ภาคพิเศษ", label: "บธ.บ. (การบัญชีบริหาร/การบัญชี) ภาคพิเศษ" },
-  { value: "วท.บ. (วิทยาศาสตร์ทั่วไป)", label: "วท.บ. (วิทยาศาสตร์ทั่วไป)" },
-  { value: "วท.บ. (วิทยาศาสตร์ชีวภาพ)", label: "วท.บ. (วิทยาศาสตร์ชีวภาพ)" },
-  { value: "วท.บ. (เคมี)", label: "วท.บ. (เคมี)" },
-  { value: "วท.บ. (ฟิสิกส์)", label: "วท.บ. (ฟิสิกส์)" },
-  { value: "วท.บ. (จุลชีววิทยา)", label: "วท.บ. (จุลชีววิทยา)" },
-  { value: "วท.บ. (วิทยาการคอมพิวเตอร์)", label: "วท.บ. (วิทยาการคอมพิวเตอร์)" },
-  { value: "วท.บ. (วิทยาการคอมพิวเตอร์) ภาคพิเศษ", label: "วท.บ. (วิทยาการคอมพิวเตอร์) ภาคพิเศษ" },
-  { value: "วท.บ. (เทคโนโลยีสารสนเทศ)", label: "วท.บ. (เทคโนโลยีสารสนเทศ)" },
-  { value: "วท.บ. (เทคโนโลยีสารสนเทศ) ภาคพิเศษ", label: "วท.บ. (เทคโนโลยีสารสนเทศ) ภาคพิเศษ" },
-  { value: "วท.บ. (คณิตศาสตร์ประยุกต์)", label: "วท.บ. (คณิตศาสตร์ประยุกต์)" },
-  { value: "วท.บ. (พฤกษนวัตกรรม)", label: "วท.บ. (พฤกษนวัตกรรม)" },
-  { value: "ศศ.บ. (ภาษาอังกฤษ)", label: "ศศ.บ. (ภาษาอังกฤษ)" },
-  { value: "ศศ.บ. (ภาษาอังกฤษ) ภาคพิเศษ", label: "ศศ.บ. (ภาษาอังกฤษ) ภาคพิเศษ" },
-  { value: "ศศ.บ. (ภาษาตะวันออก)", label: "ศศ.บ. (ภาษาตะวันออก)" },
-  { value: "ศศ.บ. (ภาษาจีนธุรกิจ)", label: "ศศ.บ. (ภาษาจีนธุรกิจ)" },
-  { value: "ศศ.บ. (รัฐศาสตร์)", label: "ศศ.บ. (รัฐศาสตร์)" },
-  { value: "ร.บ. (การเมืองและการปกครอง)", label: "ร.บ. (การเมืองและการปกครอง)" } ,
-];
-
-const masterSelect = [
-  { value: "วท.ม. (นิติวิทยาศาสตร์)", label: "วท.ม. (นิติวิทยาศาสตร์)" },
-  { value: "วท.ม. (นิติวิทยาศาสตร์) ภาคพิเศษ", label: "วท.ม. (นิติวิทยาศาสตร์) ภาคพิเศษ" },
-  { value: "วท.ม. (พฤกษ์เศรษฐกิจ)", label: "วท.ม. (พฤกษ์เศรษฐกิจ)" },
-  { value: "วท.ม. (วิทยาการพืช)", label: "วท.ม. (วิทยาการพืช)" },
-  { value: "วท.ม. (วิทยาศาสตร์และเทคโนโลยีสิ่งแวดล้อม)", label: "วท.ม. (วิทยาศาสตร์และเทคโนโลยีสิ่งแวดล้อม)" },
-  { value: "วท.ม. (ชีวผลิตภัณฑ์)", label: "วท.ม. (ชีวผลิตภัณฑ์)" },
-  { value: "วท.ม. (จุลชีววิทยา)", label: "วท.ม. (จุลชีววิทยา)" },
-  { value: "วท.ม. (เคมี)", label: "วท.ม. (เคมี)" },
-  { value: "ศศ.ม. (รัฐศาสตร์)", label: "ศศ.ม. (รัฐศาสตร์)" } , 
-  { value: "", label: "ไม่มี" }
-];
-
-const doctoralSelect = [
-  { value: "ปร.ด. (วิทยาศาสตร์ชีวผลิตภัณฑ์)", label: "ปร.ด. (วิทยาศาสตร์ชีวผลิตภัณฑ์)" } ,
-  { value: "", label: "ไม่มี" }
-];
 
 const contactPreferenceSelect = [
   {value :"ที่อยู่บ้าน" , label :"ที่อยู่บ้าน"}
@@ -273,6 +233,7 @@ useEffect(() => {
             religion: formData.religion,
 
             // การศึกษา: ปริญญาตรี
+            bachelor_degree : formData.bachelor_degree || null,
             bachelor_degree_major: formData.bachelor_degree_major || null,
             bachelor_degree_ku_batch: parseInt(formData.bachelor_degree_KU_batch) || null,
             bachelor_degree_as_batch: parseInt(formData.bachelor_degree_AS_batch) || null,
@@ -280,6 +241,7 @@ useEffect(() => {
             bachelor_degree_end_year: parseInt(formData.bachelor_degree_end_yaer) || null,
 
             // ปริญญาโท
+            master_degree : formData.master_degree || null ,
             master_degree_major: formData.master_degree_major || null,
             master_degree_ku_batch: parseInt(formData.master_degree_KU_batch) || null,
             master_degree_as_batch: parseInt(formData.master_degree_AS_batch) || null,
@@ -287,6 +249,7 @@ useEffect(() => {
             master_degree_end_year: parseInt(formData.master_degree_end_yaer) || null,
 
             // ปริญญาเอก
+            doctoral_degree : formData.master_degree || null ,
             doctoral_degree_major: formData.doctoral_degree_major || null,
             doctoral_degree_ku_batch: parseInt(formData.doctoral_degree_KU_batch) || null,
             doctoral_degree_as_batch: parseInt(formData.doctoral_degree_AS_batch) || null,
@@ -337,7 +300,7 @@ return (
   <section className="space-y-4">
     <h2 className="text-2xl font-semibold border-b pb-2">ข้อมูลส่วนตัว</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input type="text" name="student_id" required placeholder="รหัสนักศึกษา" value={formData.student_id} onChange={handleChange} className="input-field"/>
+      <input type="text" name="student_id" required placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
       <select required name="prefix" value={formData.prefix} onChange={handleChange} className="input-field">
         <option value="">เลือกคำนำหน้า</option>
         {prefixSelect.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
@@ -409,22 +372,29 @@ return (
     </div>
   </section>
 
-  {/* ปริญญาตรี */}
+{/* ปริญญาตรี */}
 <section className="space-y-4">
   <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาตรี</h2>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <select
-      name="bachelor_degree_major"
+    <input
+      type="text"
+      name="bachelor_degree"
       required
-      value={formData.bachelor_degree_major}
+      placeholder="หลักสูตร"
+      value={formData.bachelor_degree}
       onChange={handleChange}
       className="input-field"
-    >
-      <option value="">เลือกสาขา</option>
-      {bachelorSelect.map((b) => (
-        <option key={b.value} value={b.value}>{b.label}</option>
-      ))}
-    </select>
+    />
+    <input
+      type="text"
+      name="bachelor_degree_major"
+      required
+      placeholder="สาขา"
+      value={formData.bachelor_degree_major}
+      onChange={handleChange}
+      className={`input-field`}
+      disabled={!formData.bachelor_degree}
+    />
 
     <input
       type="number"
@@ -434,8 +404,8 @@ return (
       placeholder="รุ่น KU"
       value={formData.bachelor_degree_KU_batch}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.bachelor_degree_major}
+      className={`input-field`}
+      disabled={!formData.bachelor_degree}
     />
 
     <input
@@ -446,8 +416,8 @@ return (
       placeholder="รุ่น ศวท."
       value={formData.bachelor_degree_AS_batch}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.bachelor_degree_major}
+      className={`input-field`}
+      disabled={!formData.bachelor_degree}
     />
 
     <input
@@ -459,8 +429,8 @@ return (
       placeholder="ปีเริ่ม (พ.ศ.)"
       value={formData.bachelor_degree_start_yaer}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.bachelor_degree_major}
+      className={`input-field`}
+      disabled={!formData.bachelor_degree}
     />
 
     <input
@@ -472,8 +442,8 @@ return (
       placeholder="ปีจบ (พ.ศ.)"
       value={formData.bachelor_degree_end_yaer}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.bachelor_degree_major}
+      className={`input-field`}
+      disabled={!formData.bachelor_degree}
     />
   </div>
 </section>
@@ -482,17 +452,23 @@ return (
 <section className="space-y-4">
   <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาโท</h2>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <select
-      name="master_degree_major"
-      value={formData.master_degree_major}
+    <input
+      type="text"
+      name="master_degree"
+      placeholder="หลักสูตร"
+      value={formData.master_degree}
       onChange={handleChange}
       className="input-field"
-    >
-      <option value="">เลือกสาขา</option>
-      {masterSelect.map((m) => (
-        <option key={m.value} value={m.value}>{m.label}</option>
-      ))}
-    </select>
+    />
+    <input
+      type="text"
+      name="master_degree_major"
+      placeholder="สาขา"
+      value={formData.master_degree_major}
+      onChange={handleChange}
+      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
+      disabled={!formData.master_degree}
+    />
 
     <input
       type="number"
@@ -501,8 +477,8 @@ return (
       placeholder="รุ่น KU"
       value={formData.master_degree_KU_batch}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.master_degree_major}
+      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
+      disabled={!formData.master_degree}
     />
 
     <input
@@ -512,8 +488,8 @@ return (
       placeholder="รุ่น ศวท."
       value={formData.master_degree_AS_batch}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.master_degree_major}
+      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
+      disabled={!formData.master_degree}
     />
 
     <input
@@ -524,8 +500,8 @@ return (
       placeholder="ปีเริ่ม (พ.ศ.)"
       value={formData.master_degree_start_yaer}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.master_degree_major}
+      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
+      disabled={!formData.master_degree}
     />
 
     <input
@@ -536,8 +512,8 @@ return (
       placeholder="ปีจบ (พ.ศ.)"
       value={formData.master_degree_end_yaer}
       onChange={handleChange}
-      className="input-field"
-      disabled={!formData.master_degree_major}
+      className={`input-field ${formData.master_degree ? '' : 'hidden'}`}
+      disabled={!formData.master_degree}
     />
   </div>
 </section>
@@ -546,65 +522,73 @@ return (
 <section className="space-y-4">
   <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาเอก</h2>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <select
-      name="doctoral_degree_major"
-      value={formData.doctoral_degree_major}
+    <input
+      type="text"
+      name="doctoral_degree"
+      placeholder="หลักสูตร"
+      value={formData.doctoral_degree}
       onChange={handleChange}
       className="input-field"
-    >
-      <option value="">เลือกสาขา</option>
-      {doctoralSelect.map((d) => (
-        <option key={d.value} value={d.value}>{d.label}</option>
-      ))}
-    </select>
+    />
+    <input
+      type="text"
+      name="doctoral_degree_major"
+      placeholder="สาขา"
+      value={formData.doctoral_degree_major}
+      onChange={handleChange}
+      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
+      disabled={!formData.doctoral_degree}
+    />
 
-      <input
-        type="number"
-        name="doctoral_degree_KU_batch"
-        min={1}
-        placeholder="รุ่น KU"
-        value={formData.doctoral_degree_KU_batch}
-        onChange={handleChange}
-        className="input-field"
-        disabled={!formData.doctoral_degree_major}
-      />
+    <input
+      type="number"
+      name="doctoral_degree_KU_batch"
+      min={1}
+      placeholder="รุ่น KU"
+      value={formData.doctoral_degree_KU_batch}
+      onChange={handleChange}
+      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
+      disabled={!formData.doctoral_degree}
+    />
 
-      <input
-        type="number"
-        name="doctoral_degree_AS_batch"
-        min={1}
-        placeholder="รุ่น ศวท."
-        value={formData.doctoral_degree_AS_batch}
-        onChange={handleChange}
-        className="input-field"
-        disabled={!formData.doctoral_degree_major}
-      />
+    <input
+      type="number"
+      name="doctoral_degree_AS_batch"
+      min={1}
+      placeholder="รุ่น ศวท."
+      value={formData.doctoral_degree_AS_batch}
+      onChange={handleChange}
+      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
+      disabled={!formData.doctoral_degree}
+    />
 
-      <input
-        type="number"
-        name="doctoral_degree_start_yaer"
-        min={2400}
-        max={3000}
-        placeholder="ปีเริ่ม (พ.ศ.)"
-        value={formData.doctoral_degree_start_yaer}
-        onChange={handleChange}
-        className="input-field"
-        disabled={!formData.doctoral_degree_major}
-      />
+    <input
+      type="number"
+      name="doctoral_degree_start_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีเริ่ม (พ.ศ.)"
+      value={formData.doctoral_degree_start_yaer}
+      onChange={handleChange}
+      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
+      disabled={!formData.doctoral_degree}
+    />
 
-      <input
-        type="number"
-        name="doctoral_degree_end_yaer"
-        min={2400}
-        max={3000}
-        placeholder="ปีจบ (พ.ศ.)"
-        value={formData.doctoral_degree_end_yaer}
-        onChange={handleChange}
-        className="input-field"
-        disabled={!formData.doctoral_degree_major}
-      />
+    <input
+      type="number"
+      name="doctoral_degree_end_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีจบ (พ.ศ.)"
+      value={formData.doctoral_degree_end_yaer}
+      onChange={handleChange}
+      className={`input-field ${formData.doctoral_degree ? '' : 'hidden'}`}
+      disabled={!formData.doctoral_degree}
+    />
   </div>
 </section>
+
+
 
 
   {/* ที่อยู่ปัจจุบัน */}
