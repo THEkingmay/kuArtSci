@@ -282,7 +282,6 @@ useEffect(() => {
             setAlert({type : 'success' , msg : 'บันทึกการสมัครเรียบร้อย'})
             resetForm()
           }catch(err){
-            setError(err.message)
             setAlert({type : 'error' , msg : err.message})
           }finally{
             setLoad(false)
@@ -290,7 +289,7 @@ useEffect(() => {
 
     }catch(err){
       console.log(err)
-      setError(err)
+       setAlert({type : 'error' , msg : err.message})
     }
   };
 return (
