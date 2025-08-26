@@ -201,41 +201,53 @@ useEffect(() => {
 const formatAddress = (fields) => {
   return Object.entries(fields)
     .filter(([_, value]) => value !== null && value !== undefined && value !== '') // มีค่าเท่านั้น
-    .map(([key, value]) => {
+    .reduce((acc, [key, value]) => {
+      let formattedValue;
       switch (key) {
         case 'homeNo':
         case 'workNo':
-          return `เลขที่ ${value}`;
+          formattedValue = `เลขที่ ${value}`;
+          break;
         case 'homeVillageNo':
         case 'workVillageNo':
-          return `หมู่ ${value}`;
+          formattedValue = `หมู่ ${value}`;
+          break;
         case 'homeVillageName':
         case 'workVillageName':
-          return `หมู่บ้าน ${value}`;
+          formattedValue = `หมู่บ้าน ${value}`;
+          break;
         case 'homeAlley':
         case 'workAlley':
-          return `ซ.${value}`;
+          formattedValue = `ซ.${value}`;
+          break;
         case 'homeStreet':
         case 'workStreet':
-          return `ถ.${value}`;
+          formattedValue = `ถ.${value}`;
+          break;
         case 'homeSubdistrict':
         case 'workSubdistrict':
-          return `ต./แขวง.${value}`;
+          formattedValue = `ต./แขวง.${value}`;
+          break;
         case 'homeDistrict':
         case 'workDistrict':
-          return `อ./เขต.${value}`;
+          formattedValue = `อ./เขต.${value}`;
+          break;
         case 'homeProvince':
         case 'workProvince':
-          return `จ.${value}`;
+          formattedValue = `จ.${value}`;
+          break;
         case 'homeZipcode':
         case 'workZipcode':
-          return `รหัสไปรษณีย์ ${value}`;
+          formattedValue = `รหัสไปรษณีย์ ${value}`;
+          break;
         default:
-          return value;
+          formattedValue = value;
       }
-    })
-    .join(' ');
+      // ต่อ string ไปเรื่อย ๆ โดยเว้นวรรคถ้ามีค่าเดิม
+      return acc ? `${acc} ${formattedValue}` : formattedValue;
+    }, ''); // เริ่มต้นด้วย ""
 };
+
 
 // ใช้กับบ้าน
 const getFullHomeAddress = () => {
@@ -282,7 +294,11 @@ const getFullWorkAddress = () => {
           // รวมที่อยู่บ้านและที่อยู่ที่ทำงาน
           const fullHomeAddress = getFullHomeAddress();
           const fullWorkAddress = getFullWorkAddress();
-
+          function toIntOrNull(value) { 
+            const n = parseInt(value, 10);
+            // console.log(n ,isNaN(n))
+            return !isNaN(n) ? n : null;
+          }
           // สร้าง payload สำหรับส่ง API
           const payload = {
             student_id : formData.student_id , 
@@ -293,7 +309,7 @@ const getFullWorkAddress = () => {
             old_fname : formData.old_fname|| null ,
             old_lname : formData.old_lname|| null ,
             birth_date : formatBD(), 
-            age: parseInt(formData.age) || null,
+            age: toIntOrNull(formData.age),
             nationality: formData.nationality,
             race: formData.race,
             religion: formData.religion,
@@ -301,29 +317,29 @@ const getFullWorkAddress = () => {
             // การศึกษา: ปริญญาตรี
             bachelor_degree : formData.bachelor_degree || null,
             bachelor_degree_major: formData.bachelor_degree_major || null,
-            bachelor_degree_ku_batch: parseInt(formData.bachelor_degree_KU_batch) || null,
-            bachelor_degree_as_batch: parseInt(formData.bachelor_degree_AS_batch) || null,
-            bachelor_degree_start_year: parseInt(formData.bachelor_degree_start_yaer) || null, 
-            bachelor_degree_end_year: parseInt(formData.bachelor_degree_end_yaer) || null,
+            bachelor_degree_ku_batch: toIntOrNull(formData.bachelor_degree_KU_batch),
+            bachelor_degree_as_batch: toIntOrNull(formData.bachelor_degree_AS_batch),
+            bachelor_degree_start_year: toIntOrNull(formData.bachelor_degree_start_yaer),
+            bachelor_degree_end_year: toIntOrNull(formData.bachelor_degree_end_yaer),
 
             // ปริญญาโท
             master_degree : formData.master_degree || null ,
             master_degree_major: formData.master_degree_major || null,
-            master_degree_ku_batch: parseInt(formData.master_degree_KU_batch) || null,
-            master_degree_as_batch: parseInt(formData.master_degree_AS_batch) || null,
-            master_degree_start_year: parseInt(formData.master_degree_start_yaer) || null,
-            master_degree_end_year: parseInt(formData.master_degree_end_yaer) || null,
+            master_degree_ku_batch: toIntOrNull(formData.master_degree_KU_batch),
+            master_degree_as_batch: toIntOrNull(formData.master_degree_AS_batch),
+            master_degree_start_year: toIntOrNull(formData.master_degree_start_yaer),
+            master_degree_end_year: toIntOrNull(formData.master_degree_end_yaer),
 
             // ปริญญาเอก
             doctoral_degree : formData.master_degree || null ,
             doctoral_degree_major: formData.doctoral_degree_major || null,
-            doctoral_degree_ku_batch: parseInt(formData.doctoral_degree_KU_batch) || null,
-            doctoral_degree_as_batch: parseInt(formData.doctoral_degree_AS_batch) || null,
-            doctoral_degree_start_year: parseInt(formData.doctoral_degree_start_yaer) || null,
-            doctoral_degree_end_year: parseInt(formData.doctoral_degree_end_yaer) || null,
+            doctoral_degree_ku_batch: toIntOrNull(formData.doctoral_degree_KU_batch),
+            doctoral_degree_as_batch: toIntOrNull(formData.doctoral_degree_AS_batch),
+            doctoral_degree_start_year: toIntOrNull(formData.doctoral_degree_start_yaer),
+            doctoral_degree_end_year: toIntOrNull(formData.doctoral_degree_end_yaer),
             
-            current_home_place: fullHomeAddress,
-            current_work_place: fullWorkAddress,
+            current_home_place: fullHomeAddress || null,
+            current_work_place: fullWorkAddress || null,
 
             // 🟢 ช่องทางติดต่อ
             contact_preference: formData.contact_preference,
@@ -336,7 +352,7 @@ const getFullWorkAddress = () => {
             member_type: formData.member_type,
             slip : formData.slip
           };
-          console.log(payload)
+          // console.log(payload)
           const formDataToSend = new FormData()
           for (const key in payload) {
               formDataToSend.append(key, formData[key]);
@@ -352,6 +368,7 @@ const getFullWorkAddress = () => {
             resetForm()
           }catch(err){
             setAlert({type : 'error' , msg : err.message})
+            console.log(err)
           }finally{
             setLoad(false)
           }
@@ -369,14 +386,14 @@ return (
   <section className="space-y-4">
     <h2 className="text-2xl font-semibold border-b pb-2">ข้อมูลส่วนตัว</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input type="text" name="student_id"  placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
+      <input required type="text" name="student_id"  placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
       <select  name="prefix" value={formData.prefix} onChange={handleChange} className="input-field">
         <option value="">เลือกคำนำหน้า</option>
         {prefixSelect.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
       </select>
       {formData.prefix === "อื่นๆ" && <input type="text"  name="custom_prefix" placeholder="ระบุคำนำหน้า" value={formData.custom_prefix} onChange={handleChange} className="input-field"/>}
-      <input type="text" name="first_name" placeholder="ชื่อ"  value={formData.first_name} onChange={handleChange} className="input-field"/>
-      <input type="text" name="last_name" placeholder="นามสกุล"  value={formData.last_name} onChange={handleChange} className="input-field"/>
+      <input required type="text" name="first_name" placeholder="ชื่อ"  value={formData.first_name} onChange={handleChange} className="input-field"/>
+      <input required type="text" name="last_name" placeholder="นามสกุล"  value={formData.last_name} onChange={handleChange} className="input-field"/>
       <input type="text" name="old_fname" placeholder="ชื่อเดิม" value={formData.old_fname} onChange={handleChange} className="input-field"/>
       <input type="text" name="old_lname" placeholder="นามสกุลเดิม" value={formData.old_lname} onChange={handleChange} className="input-field"/>
        {/* วันเกิดแบบไทย */}
@@ -807,6 +824,7 @@ return (
 
   {/* Dropdown เลือกประเภทสมาชิก */}
   <select
+  required
     name="member_type"
     value={formData.member_type}
     onChange={handleChange}
@@ -824,6 +842,7 @@ return (
   <div className="flex items-center gap-4 mt-4">
     <span className="w-1/5">เลือกรูปสลิปเงินโอน<br/>(ขนาดไม่เกิน2MB)</span>
     <input
+    required
       type="file"
       name="slip"
       onChange={handleChangeFile}

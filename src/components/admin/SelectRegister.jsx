@@ -7,6 +7,10 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
     const [confirmStatus , setConfirmStatus] = useState(null)
     const [load ,setLaod] = useState(false)
 
+  const showSlip = async (slipName)=>{  // แสดงสลิปเงินโอน
+
+  }
+
     const handleChangeStatus = async (newStatus) =>{
         try{
             setLaod(true)
@@ -116,9 +120,9 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
             ข้อมูลส่วนตัว
           </h3>
           <p>รหัสนิสิต: <span className="font-medium">{selectMember.student_id}</span></p>
-          <p>วันเกิด: {selectMember.birth_date} (อายุ: {selectMember.age})</p>
-          <p>เชื้อชาติ: {selectMember.race} | สัญชาติ: {selectMember.nationality}</p>
-          <p>ศาสนา: {selectMember.religion}</p>
+          <p>วันเกิด: {selectMember.birth_date || '-'} (อายุ: {selectMember.age || '-'})</p>
+          <p>เชื้อชาติ: {selectMember.race || '-'} | สัญชาติ: {selectMember.nationality || '-'}</p>
+          <p>ศาสนา: {selectMember.religion || '-'}</p>
         </div>
 
         {/* Education */}
@@ -132,40 +136,34 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
             <p>ปีเริ่ม: {selectMember.bachelor_degree_start_year || "-"}</p>
             <p>ปีจบ: {selectMember.bachelor_degree_end_year || "-"}</p>
           </div>
-
-          {selectMember.master_degree && (
-            <div className="mb-2">
-              <p>ปริญญาโทหลักสูตร: {selectMember.master_degree}</p>
-              <p>สาขา: {selectMember.master_degree_major}</p>
+          <div className="mb-2">
+              <p>ปริญญาโทหลักสูตร: {selectMember.master_degree || '-'}</p>
+              <p>สาขา: {selectMember.master_degree_major || '-'}</p>
               <p>รุ่น KU: {selectMember.master_degree_ku_batch || "-"}</p>
               <p>รุ่น ศวท: {selectMember.master_degree_as_batch || "-"}</p>
               <p>ปีเริ่ม: {selectMember.master_degree_start_year || "-"}</p>
               <p>ปีจบ: {selectMember.master_degree_end_year || "-"}</p>
-            </div>
-          )}
-
-          {selectMember.doctoral_degree && (
-            <div>
-              <p>ปริญญาเอกสูตร: {selectMember.doctoral_degree}</p>
-              <p>สาขา: {selectMember.doctoral_degree_major}</p>
-              <p>รุ่น KU: {selectMember.doctoral_degree_ku_batch || "-"}</p>
-              <p>รุ่น ศวท: {selectMember.doctoral_degree_as_batch || "-"}</p>
-              <p>ปีเริ่ม: {selectMember.doctoral_degree_start_year || "-"}</p>
-              <p>ปีจบ: {selectMember.doctoral_degree_end_year || "-"}</p>
-            </div>
-          )}
+          </div>
+          <div>
+            <p>ปริญญาเอกสูตร: {selectMember.doctoral_degree || '-'}</p>
+            <p>สาขา: {selectMember.doctoral_degree_major || "-"}</p>
+            <p>รุ่น KU: {selectMember.doctoral_degree_ku_batch || "-"}</p>
+            <p>รุ่น ศวท: {selectMember.doctoral_degree_as_batch || "-"}</p>
+            <p>ปีเริ่ม: {selectMember.doctoral_degree_start_year || "-"}</p>
+            <p>ปีจบ: {selectMember.doctoral_degree_end_year || "-"}</p>
+          </div>
         </div>
 
         {/* Contact */}
         <div className="mb-4">
           <h3 className="text-lg font-medium text-gray-700 mb-2">ข้อมูลติดต่อ</h3>
-          <p>ที่อยู่บ้าน: {selectMember.current_home_place}</p>
-          <p>ที่อยู่ทำงาน: {selectMember.current_work_place}</p>
-          <p>ช่องทางติดต่อที่สะดวก: {selectMember.contact_preference}</p>
+          <p>ที่อยู่บ้าน: {selectMember.current_home_place || '-'}</p>
+          <p>ที่อยู่ทำงาน: {selectMember.current_work_place || '-'}</p>
+          <p>ช่องทางติดต่อที่สะดวก: {selectMember.contact_preference || '-'}</p>
           <p>โทรศัพท์: {selectMember.phone_number || "-"}</p>
           <p>อีเมลติดต่อ: {selectMember.contact_email || "-"}</p>
-          {selectMember.line_id && <p>Line: {selectMember.line_id}</p>}
-          {selectMember.facebook && <p>Facebook: {selectMember.facebook}</p>}
+          {selectMember.line_id && <p>Line: {selectMember.line_id || '-'}</p>}
+          {selectMember.facebook && <p>Facebook: {selectMember.facebook || '-'}</p>}
         </div>
 
         {/* Member Info */}
@@ -176,6 +174,7 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
             วันที่สมัคร:{" "}
             {new Date(selectMember.submitted_at).toLocaleDateString("th-TH")}
           </p>
+          <button className="border cursor-pointer p-2 rounded-lg shadow-sm border-gray-300 mt-2">ดูสลิปการชำระเงิน</button>
         </div>
 
          <div className="flex gap-4 mt-6">

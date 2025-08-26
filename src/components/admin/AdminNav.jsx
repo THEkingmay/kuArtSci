@@ -5,7 +5,7 @@ import { HiMenu, HiX } from "react-icons/hi"; // ใช้ไอคอน hambur
 
 export default function AdminNavbar() {
   const navigate = useNavigate();
-  const { logout , user } = useAuth();
+  const { logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
