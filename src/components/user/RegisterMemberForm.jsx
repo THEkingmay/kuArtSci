@@ -839,8 +839,10 @@ return (
   </select>
 
   {/* อัปโหลดสลิปโอนเงิน */}
-  <div className="flex items-center gap-4 mt-4">
-    <span className="w-1/5">เลือกรูปสลิปเงินโอน<br/>(ขนาดไม่เกิน2MB)</span>
+  <div className="md:flex items-center gap-4 mt-4">
+    <span className="w-1/5 d-flex">
+      เลือกรูปสลิปเงินโอน<br className="hidden md:block"/>(ขนาดไม่เกิน2MB)
+    </span>
     <input
     required
       type="file"
