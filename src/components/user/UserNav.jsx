@@ -15,7 +15,7 @@ export default function UserNavbar() {
 
   const menuItems = [
     { name: "หน้าแรก", path:'/' , onClick: () => navigate("/") },
-    { name: "สมาคม", path:'/member' , onClick: () => navigate("/member") },
+    { name: "สมัครสมาคมศิษย์เก่า", path:'/member' , onClick: () => navigate("/member") },
     // แสดงปุ่มเข้าสู่ระบบถ้าไม่ได้ล็อกอิน
     ...(!currUser ? [{ name: "เข้าสู่ระบบ", onClick: () => navigate("/login") }] : []),
   ];

@@ -173,12 +173,28 @@ useEffect(() => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-const handleChangeFile = (e) => {
-  const { name, files } = e.target;
-  if(files && files.length > 0){
-    setFormData(prev => ({ ...prev, [name]: files[0] })); // เก็บ File object ตัวแรก
-  }
-};
+  const handleChangeFile = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        // กำหนดขนาดไฟล์สูงสุด (2MB)
+        const maxSize = 2 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+           setAlert({type : 'error' , msg : 'เลือกขนาดไฟล์ไม่เกิน 2 MB'})
+          e.target.value = ""; // รีเซ็ต input file
+          return;
+        }
+        // ตรวจสอบชนิดไฟล์ (optional ถ้าอยากให้เลือกเฉพาะ .jpg / .png)
+        const allowedTypes = ["image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+           setAlert({type : 'error' , msg : 'เลือกได้แค่รูปภาพเท่านั้น'})
+          e.target.value = "";
+          return;
+        }
+        setFormData({ ...formData, slip: file });
+      }
+  };
+
 
 
 // 🟢 ฟังก์ชันช่วยต่อที่อยู่แบบมีค่าเท่านั้น
@@ -806,7 +822,7 @@ return (
 
   {/* อัปโหลดสลิปโอนเงิน */}
   <div className="flex items-center gap-4 mt-4">
-    <span className="w-1/5">เลือกรูปสลิปเงินโอน</span>
+    <span className="w-1/5">เลือกรูปสลิปเงินโอน<br/>(ขนาดไม่เกิน2MB)</span>
     <input
       type="file"
       name="slip"
