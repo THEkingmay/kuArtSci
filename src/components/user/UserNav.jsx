@@ -21,12 +21,12 @@ export default function UserNavbar() {
   ];
 
   return (
-    <nav className="w-full bg-white border-b border-gray-300 container mx-auto">
+    <nav className="w-full bg-green-900 border-b border-gray-300 container-fluid  mx-auto">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <div
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-gray-800 cursor-pointer hover:text-blue-500 transition-colors"
+          className="text-2xl font-bold text-white cursor-pointer hover:text-gray-300 transition-colors"
         >
           KU AS
         </div>
@@ -37,7 +37,7 @@ export default function UserNavbar() {
             <div
               key={item.name}
               onClick={item.onClick}
-              className={`text-gray-700 cursor-pointer hover:text-blue-500 transition-colors 
+              className={`text-white cursor-pointer hover:text-gray-300 transition-colors 
                 ${location.pathname === item.path ?  'underline underline-offset-8' : ''}
                 ${item.name=='เข้าสู่ระบบ' || item.name=='ออกจากระบบ' ? 'border p-2 rounded-lg' : ''}
                 `}

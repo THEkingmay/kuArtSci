@@ -7,7 +7,7 @@ export default function AdminHome() {
     return (
         <>
             <AdminNavbar />
-            <div className="container mx-auto mt-10">
+            <div className=" container mx-auto mt-10">
                 {/* หัวข้อหลัก */}
                 <h1 className="text-3xl font-bold text-center text-gray-800 underline mb-8">
                     หน้าจัดการกิจกรรมข่าวสาร

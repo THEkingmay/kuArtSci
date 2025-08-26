@@ -7,10 +7,10 @@ export default function UserHome() {
   return (
     <>
       <UserNavbar />
-      <div className="container mx-auto mt-6 px-4">
+      <div className="container mx-auto p-4 " >
         {/* หัวข้อข่าวสาร */}
         <h1 className="text-center text-3xl font-semibold underline mb-8 text-gray-800">
-          ข่าวสาร
+          ข่าวสารและกิจกรรม
         </h1>
 
         {/* การ์ดสมัครสมาชิก */}
