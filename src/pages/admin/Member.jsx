@@ -13,11 +13,13 @@ export default function AdminMember() {
   const [selectMember , setSelectMember] = useState(null)
 
   const fetchData = async () => {
+    const token = localStorage.getItem('token')
       try {
         const res = await fetch(`${API_URL}/member/getMemberRegisteration`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}` // ดึง token จาก localStorage
           },
         });
 
