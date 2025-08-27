@@ -779,7 +779,7 @@ return (
         {contactPreferenceSelect.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
       </select>
       <input  type="text" name="phone_number" placeholder="เบอร์มือถือ" value={formData.phone_number} onChange={handleChange} className="input-field"/>
-      <input  type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
+      <input required type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
       <input type="text" name="line_id" placeholder="Line ID" value={formData.line_id} onChange={handleChange} className="input-field"/>
       <input type="text" name="facebook" placeholder="Facebook" value={formData.facebook} onChange={handleChange} className="input-field"/>
     </div>
