@@ -8,7 +8,7 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
     const [load ,setLaod] = useState(false)
 
   const showSlip = async (slipName)=>{  // แสดงสลิปเงินโอน
-
+    alert(slipName)
   }
 
     const handleChangeStatus = async (newStatus) =>{
@@ -174,7 +174,7 @@ export default function SelectMemberRegisteraion({ selectMember, clear , fetchDa
             วันที่สมัคร:{" "}
             {new Date(selectMember.submitted_at).toLocaleDateString("th-TH")}
           </p>
-          <button className="border cursor-pointer p-2 rounded-lg shadow-sm border-gray-300 mt-2">ดูสลิปการชำระเงิน</button>
+          <button  className="border cursor-pointer p-2 rounded-lg shadow-sm border-gray-300 mt-2">ดูสลิปการชำระเงิน</button>
         </div>
 
          <div className="flex gap-4 mt-6">

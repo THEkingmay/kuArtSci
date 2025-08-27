@@ -53,7 +53,7 @@ export default function AdminNavbar() {
         <div className="md:hidden flex items-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-700 focus:outline-none"
+            className="text-white focus:outline-none"
           >
             {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
           </button>

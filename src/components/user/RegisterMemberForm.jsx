@@ -301,18 +301,18 @@ const getFullWorkAddress = () => {
           }
           // สร้าง payload สำหรับส่ง API
           const payload = {
-            student_id : formData.student_id , 
-            prefix : formData.prefix ,
+            student_id : formData.student_id|| null , 
+            prefix : formData.prefix || null,
             custom_prefix : formData.custom_prefix || null ,
-            first_name : formData.first_name , 
-            last_name : formData.last_name , 
+            first_name : formData.first_name || null, 
+            last_name : formData.last_name || null, 
             old_fname : formData.old_fname|| null ,
             old_lname : formData.old_lname|| null ,
             birth_date : formatBD(), 
             age: toIntOrNull(formData.age),
-            nationality: formData.nationality,
-            race: formData.race,
-            religion: formData.religion,
+            nationality: formData.nationality || null,
+            race: formData.race || null,
+            religion: formData.religion || null,
 
             // การศึกษา: ปริญญาตรี
             bachelor_degree : formData.bachelor_degree || null,
@@ -342,14 +342,14 @@ const getFullWorkAddress = () => {
             current_work_place: fullWorkAddress || null,
 
             // 🟢 ช่องทางติดต่อ
-            contact_preference: formData.contact_preference,
+            contact_preference: formData.contact_preference || null,
             phone_number: formData.phone_number|| null,
             contact_email:formData.contact_email|| null,
             line_id: formData.line_id|| null,
             facebook:formData.facebook|| null,
 
             // 🟢 ประเภทสมาชิก
-            member_type: formData.member_type,
+            member_type: formData.member_type ,
             slip : formData.slip
           };
           // console.log(payload)
