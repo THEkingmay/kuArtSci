@@ -8,7 +8,7 @@ export default function UserMember() {
         {/* กล่องหลัก */}
         <div className="w-full  bg-white shadow-lg rounded-2xl border border-gray-200 md:p-8">
           {/* หัวข้อ + ปุ่มเข้าสู่ระบบ */}
-          <div className="flex justify-between items-center mb-6 border-b pb-4">
+          <div className="flex justify-between items-center mb-6 border-b py-4">
             <h1 className="text-2xl font-bold text-gray-800">
               แบบฟอร์มสมัครสมาชิก
             </h1>
