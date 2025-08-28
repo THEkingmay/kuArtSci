@@ -821,7 +821,7 @@ return (
     <div className="p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition">
       <h3 className="text-lg font-semibold text-purple-700">สมาชิกวิสามัญ</h3>
       <p className="text-gray-600 mt-2">
-        <span className="font-medium">คุณสมบัติ:</span>บุลคลที่เคยปฏิบัติหรือสำเร็จการศึกษาในหลักสูตรเฉพาะด้าน<br />
+        <span className="font-medium">คุณสมบัติ:</span>บุลคลที่เคยปฏิบัติงานหรือสำเร็จการศึกษาในหลักสูตรเฉพาะด้าน<br />
         <span className="font-medium">ค่าลงทะเบียน:</span> 300 บาท<br />
         <span className="font-medium">ระยะเวลาการเป็นสมาชิก:</span>ตลอดชีพ
       </p>
