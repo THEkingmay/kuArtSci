@@ -177,21 +177,21 @@ useEffect(() => {
   const handleChangeFile = (e) => {
       const file = e.target.files[0];
       if (file) {
-        // กำหนดขนาดไฟล์สูงสุด (2MB)
-        const maxSize = 2 * 1024 * 1024;
+        // กำหนดขนาดไฟล์สูงสุด (5MB)
+        const maxSize = 5 * 1024 * 1024;
 
         if (file.size > maxSize) {
            setAlert({type : 'error' , msg : 'เลือกขนาดไฟล์ไม่เกิน 2 MB'})
           e.target.value = ""; // รีเซ็ต input file
           return;
         }
-        // ตรวจสอบชนิดไฟล์ (optional ถ้าอยากให้เลือกเฉพาะ .jpg / .png)
-        const allowedTypes = ["image/jpeg", "image/png"];
-        if (!allowedTypes.includes(file.type)) {
-           setAlert({type : 'error' , msg : 'เลือกได้แค่รูปภาพเท่านั้น'})
-          e.target.value = "";
-          return;
-        }
+        // // ตรวจสอบชนิดไฟล์ (optional ถ้าอยากให้เลือกเฉพาะ .jpg / .png)
+        // const allowedTypes = ["image/jpeg", "image/png"];
+        // if (!allowedTypes.includes(file.type)) {
+        //    setAlert({type : 'error' , msg : 'เลือกได้แค่รูปภาพเท่านั้น'})
+        //   e.target.value = "";
+        //   return;
+        // }
         setFormData({ ...formData, transcript: file });
       }
   };
