@@ -571,7 +571,7 @@ return (
     <input
       type="text"
       name="workPhone"
-      placeholder="หมายเลขโทศัพท์ที่ทำงาน"
+      placeholder="หมายเลขโทรศัพท์ที่ทำงาน"
       value={formData.workPhone}
       onChange={handleChange}
       className="input-field"
