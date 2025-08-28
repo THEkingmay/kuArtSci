@@ -41,7 +41,7 @@ export default function RegisterMemberForm() {
     nationality: "",
     race: "",
     religion: "",
-
+    job:'' ,
     // 🟢 ปริญญาตรี
     bachelor_degree :"" , // หลักสูตร
     bachelor_degree_major: "",
@@ -100,14 +100,15 @@ export default function RegisterMemberForm() {
 
     // 🟢 ประเภทสมาชิก
     member_type: "",
-    slip :""
+    transcript :""
   };
 
 const prefixSelect = [
   {value:'นาย' , label : "นาย"} ,
   {value:'นาง' , label : "นาง"} ,
   {value:'นางสาว' , label : "นางสาว"} ,
-  {value:'อื่นๆ' , label : "อื่นๆ"} ,
+  {value:'ยศ' , label : "ยศ"} ,
+  {value:'ตำแหน่ง' , label : "ตำแหน่ง"} ,
 ]
 
 
@@ -122,7 +123,7 @@ const memberTypeSelect = [
   {value :"สมาชิกวิสามัญ" , label :"สมาชิกวิสามัญ"}
 ]
 
-  const [formData, setFormData] = useState(initialFormData);
+const [formData, setFormData] = useState(initialFormData);
 
   // ฟังก์ชันรีเซตค่า
   const resetForm = () => {
@@ -191,7 +192,7 @@ useEffect(() => {
           e.target.value = "";
           return;
         }
-        setFormData({ ...formData, slip: file });
+        setFormData({ ...formData, transcript: file });
       }
   };
 
@@ -313,7 +314,7 @@ const getFullWorkAddress = () => {
             nationality: formData.nationality || null,
             race: formData.race || null,
             religion: formData.religion || null,
-
+            job : formData.job || null ,
             // การศึกษา: ปริญญาตรี
             bachelor_degree : formData.bachelor_degree || null,
             bachelor_degree_major: formData.bachelor_degree_major || null,
@@ -350,7 +351,7 @@ const getFullWorkAddress = () => {
 
             // 🟢 ประเภทสมาชิก
             member_type: formData.member_type ,
-            slip : formData.slip
+            transcript : formData.transcript
           };
           // console.log(payload)
           const formDataToSend = new FormData()
@@ -381,17 +382,17 @@ const getFullWorkAddress = () => {
   };
 return (
   <>
-  <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-8">
+  <form onSubmit={handleSubmit} className=" p-6 bg-white space-y-8">
   {/* ข้อมูลส่วนตัว */}
   <section className="space-y-4">
-    <h2 className="text-2xl font-semibold border-b pb-2">ข้อมูลส่วนตัว</h2>
+    <h2 className="text-2xl font-semibold border-b pb-2">1.ข้อมูลส่วนตัว</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <input required type="text" name="student_id"  placeholder="รหัสประจำตัวนิสิต" value={formData.student_id} onChange={handleChange} className="input-field"/>
       <select  name="prefix" value={formData.prefix} onChange={handleChange} className="input-field">
         <option value="">เลือกคำนำหน้า</option>
         {prefixSelect.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
       </select>
-      {formData.prefix === "อื่นๆ" && <input type="text"  name="custom_prefix" placeholder="ระบุคำนำหน้า" value={formData.custom_prefix} onChange={handleChange} className="input-field"/>}
+      {(formData.prefix === "ยศ" || formData.prefix === "ตำแหน่ง") && <input type="text"  name="custom_prefix" placeholder="ระบุยศหรือตำแหน่ง" value={formData.custom_prefix} onChange={handleChange} className="input-field"/>}
       <input required type="text" name="first_name" placeholder="ชื่อ"  value={formData.first_name} onChange={handleChange} className="input-field"/>
       <input required type="text" name="last_name" placeholder="นามสกุล"  value={formData.last_name} onChange={handleChange} className="input-field"/>
       <input type="text" name="old_fname" placeholder="ชื่อเดิม" value={formData.old_fname} onChange={handleChange} className="input-field"/>
@@ -455,211 +456,26 @@ return (
       <input type="text" name="nationality"  placeholder="สัญชาติ" value={formData.nationality} onChange={handleChange} className="input-field"/>
       <input type="text" name="race"  placeholder="เชื้อชาติ" value={formData.race} onChange={handleChange} className="input-field"/>
       <input type="text" name="religion"  placeholder="ศาสนา" value={formData.religion} onChange={handleChange} className="input-field"/>
+      <input type="text" name="job" placeholder="อาชีพ" value={formData.job} onChange={handleChange} className="input-field" />
     </div>
   </section>
 
-{/* ปริญญาตรี */}
-<section className="space-y-4">
-  <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาตรี</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input
-      type="text"
-      name="bachelor_degree"
-      placeholder="หลักสูตร"
-      value={formData.bachelor_degree}
-      onChange={handleChange}
-      className="input-field"
-    />
-    <input
-      type="text"
-      name="bachelor_degree_major"
-      placeholder="สาขา"
-      value={formData.bachelor_degree_major}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="bachelor_degree_KU_batch"
-      min={1}
-      placeholder="รุ่น KU"
-      value={formData.bachelor_degree_KU_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="bachelor_degree_AS_batch"
-      min={1}
-      placeholder="รุ่น ศวท."
-      value={formData.bachelor_degree_AS_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="bachelor_degree_start_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีเริ่ม (พ.ศ.)"
-      value={formData.bachelor_degree_start_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      
-      name="bachelor_degree_end_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีจบ (พ.ศ.)"
-      value={formData.bachelor_degree_end_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-  </div>
-</section>
-
-{/* ปริญญาโท */}
-<section className="space-y-4">
-  <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาโท</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input
-      type="text"
-      name="master_degree"
-      placeholder="หลักสูตร"
-      value={formData.master_degree}
-      onChange={handleChange}
-      className="input-field"
-    />
-    <input
-      type="text"
-      name="master_degree_major"
-      placeholder="สาขา"
-      value={formData.master_degree_major}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="master_degree_KU_batch"
-      min={1}
-      placeholder="รุ่น KU"
-      value={formData.master_degree_KU_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="master_degree_AS_batch"
-      min={1}
-      placeholder="รุ่น ศวท."
-      value={formData.master_degree_AS_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="master_degree_start_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีเริ่ม (พ.ศ.)"
-      value={formData.master_degree_start_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="master_degree_end_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีจบ (พ.ศ.)"
-      value={formData.master_degree_end_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-  </div>
-</section>
-
-{/* ปริญญาเอก */}
-<section className="space-y-4">
-  <h2 className="text-2xl font-semibold border-b pb-2">ปริญญาเอก</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input
-      type="text"
-      name="doctoral_degree"
-      placeholder="หลักสูตร"
-      value={formData.doctoral_degree}
-      onChange={handleChange}
-      className="input-field"
-    />
-    <input
-      type="text"
-      name="doctoral_degree_major"
-      placeholder="สาขา"
-      value={formData.doctoral_degree_major}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="doctoral_degree_KU_batch"
-      min={1}
-      placeholder="รุ่น KU"
-      value={formData.doctoral_degree_KU_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="doctoral_degree_AS_batch"
-      min={1}
-      placeholder="รุ่น ศวท."
-      value={formData.doctoral_degree_AS_batch}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="doctoral_degree_start_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีเริ่ม (พ.ศ.)"
-      value={formData.doctoral_degree_start_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-
-    <input
-      type="number"
-      name="doctoral_degree_end_yaer"
-      min={2400}
-      max={3000}
-      placeholder="ปีจบ (พ.ศ.)"
-      value={formData.doctoral_degree_end_yaer}
-      onChange={handleChange}
-      className={`input-field`}
-    />
-  </div>
-</section>
 
 
-
-
-  {/* ที่อยู่ปัจจุบัน */}
+  {/* ช่องทางติดต่อ */}
   <section className="space-y-4">
-    <h2 className="text-2xl font-semibold border-b pb-2">ที่อยู่ปัจจุบัน</h2>
+    <h2 className="text-2xl font-semibold border-b pb-2">2.ข้อมูลการติดต่อและที่อยู่ปัจจุบัน</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <select  name="contact_preference" value={formData.contact_preference} onChange={handleChange} className="input-field">
+        <option value="">ช่องทางติดต่อหลัก</option>
+        {contactPreferenceSelect.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+      </select>
+      <input  type="text" name="phone_number" placeholder="หมายเลขโทรศัพท์มือถือ" value={formData.phone_number} onChange={handleChange} className="input-field"/>
+      <input required type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
+      <input type="text" name="line_id" placeholder="Line ID" value={formData.line_id} onChange={handleChange} className="input-field"/>
+      <input type="text" name="facebook" placeholder="Facebook" value={formData.facebook} onChange={handleChange} className="input-field"/>
+    </div>
+    <h2 className="text-2xl  underline mt-2">ที่อยู่ปัจจุบัน</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <input  type="text" name="homeNo" placeholder="บ้านเลขที่" value={formData.homeNo} onChange={handleChange} className="input-field"/>
       <input type="text" name="homeVillageNo" placeholder="หมู่" value={formData.homeVillageNo} onChange={handleChange} className="input-field"/>
@@ -670,13 +486,12 @@ return (
       <input type="text" name="homeDistrict" placeholder="อำเภอ/เขต" value={formData.homeDistrict} onChange={handleChange} className="input-field"/>
       <input  type="text" name="homeProvince" placeholder="จังหวัด" value={formData.homeProvince} onChange={handleChange} className="input-field"/>
       <input  type="text" name="homeZipcode" placeholder="รหัสไปรษณีย์" value={formData.homeZipcode} onChange={handleChange} className="input-field"/>
-      <input type="text" name="homePhone" placeholder="เบอร์โทรบ้าน" value={formData.homePhone} onChange={handleChange} className="input-field"/>
+      <input type="text" name="homePhone" placeholder="หมายเลขโทรศัพท์บ้าน" value={formData.homePhone} onChange={handleChange} className="input-field"/>
     </div>
-  </section>
-
+  </section>  
   {/* สถานที่ทำงาน */}
 <section className="space-y-4">
-  <h2 className="text-2xl font-semibold border-b pb-2">สถานที่ทำงาน</h2>
+  <h2 className="text-2xl font-semibold border-b pb-2">3.ข้อมูลสถานที่ทำงาน</h2>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
     <input
       type="text"
@@ -753,7 +568,7 @@ return (
     <input
       type="text"
       name="workPhone"
-      placeholder="เบอร์โทรที่ทำงาน"
+      placeholder="หมายเลขโทศัพท์ที่ทำงาน"
       value={formData.workPhone}
       onChange={handleChange}
       className="input-field"
@@ -770,24 +585,212 @@ return (
 </section>
 
 
-  {/* ช่องทางติดต่อ */}
-  <section className="space-y-4">
-    <h2 className="text-2xl font-semibold border-b pb-2">ช่องทางติดต่อ</h2>
+<section>
+  <h2  className="text-2xl font-semibold border-b pb-2">
+    4.ประวัติการศึกษาในคณะศิลปศาสตร์และวิทยาศาสตร์
+  </h2>
+  {/* ปริญญาตรี */}
+<section className="space-y-4">
+  <h2 className="text-2xl font-semibold  mt-4">ปริญญาตรี</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input
+      type="text"
+      name="bachelor_degree"
+      placeholder="หลักสูตร"
+      value={formData.bachelor_degree}
+      onChange={handleChange}
+      className="input-field"
+    />
+    <input
+      type="text"
+      name="bachelor_degree_major"
+      placeholder="สาขา"
+      value={formData.bachelor_degree_major}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="bachelor_degree_KU_batch"
+      min={1}
+      placeholder="รุ่น KU"
+      value={formData.bachelor_degree_KU_batch}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="bachelor_degree_AS_batch"
+      min={1}
+      placeholder="รุ่น ศวท."
+      value={formData.bachelor_degree_AS_batch}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="bachelor_degree_start_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีเริ่ม (พ.ศ.)"
+      value={formData.bachelor_degree_start_yaer}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      
+      name="bachelor_degree_end_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีจบ (พ.ศ.)"
+      value={formData.bachelor_degree_end_yaer}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+  </div>
+</section>
+
+{/* ปริญญาโท */}
+<section className="space-y-4">
+  <h2 className="text-2xl font-semibold  mt-4">ปริญญาโท</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input
+      type="text"
+      name="master_degree"
+      placeholder="หลักสูตร"
+      value={formData.master_degree}
+      onChange={handleChange}
+      className="input-field"
+    />
+    <input
+      type="text"
+      name="master_degree_major"
+      placeholder="สาขา"
+      value={formData.master_degree_major}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="master_degree_KU_batch"
+      min={1}
+      placeholder="รุ่น KU"
+      value={formData.master_degree_KU_batch}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="master_degree_AS_batch"
+      min={1}
+      placeholder="รุ่น ศวท."
+      value={formData.master_degree_AS_batch}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="master_degree_start_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีเริ่ม (พ.ศ.)"
+      value={formData.master_degree_start_yaer}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+
+    <input
+      type="number"
+      name="master_degree_end_yaer"
+      min={2400}
+      max={3000}
+      placeholder="ปีจบ (พ.ศ.)"
+      value={formData.master_degree_end_yaer}
+      onChange={handleChange}
+      className={`input-field`}
+    />
+  </div>
+</section>
+
+{/* ปริญญาเอก */}
+<section className="space-y-4">
+    <h2 className="text-2xl font-semibold mt-4">ปริญญาเอก</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <select  name="contact_preference" value={formData.contact_preference} onChange={handleChange} className="input-field">
-        <option value="">ช่องทางติดต่อหลัก</option>
-        {contactPreferenceSelect.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
-      </select>
-      <input  type="text" name="phone_number" placeholder="เบอร์มือถือ" value={formData.phone_number} onChange={handleChange} className="input-field"/>
-      <input required type="email" name="contact_email" placeholder="อีเมล" value={formData.contact_email} onChange={handleChange} className="input-field"/>
-      <input type="text" name="line_id" placeholder="Line ID" value={formData.line_id} onChange={handleChange} className="input-field"/>
-      <input type="text" name="facebook" placeholder="Facebook" value={formData.facebook} onChange={handleChange} className="input-field"/>
+      <input
+        type="text"
+        name="doctoral_degree"
+        placeholder="หลักสูตร"
+        value={formData.doctoral_degree}
+        onChange={handleChange}
+        className="input-field"
+      />
+      <input
+        type="text"
+        name="doctoral_degree_major"
+        placeholder="สาขา"
+        value={formData.doctoral_degree_major}
+        onChange={handleChange}
+        className={`input-field`}
+      />
+
+      <input
+        type="number"
+        name="doctoral_degree_KU_batch"
+        min={1}
+        placeholder="รุ่น KU"
+        value={formData.doctoral_degree_KU_batch}
+        onChange={handleChange}
+        className={`input-field`}
+      />
+
+      <input
+        type="number"
+        name="doctoral_degree_AS_batch"
+        min={1}
+        placeholder="รุ่น ศวท."
+        value={formData.doctoral_degree_AS_batch}
+        onChange={handleChange}
+        className={`input-field`}
+      />
+
+      <input
+        type="number"
+        name="doctoral_degree_start_yaer"
+        min={2400}
+        max={3000}
+        placeholder="ปีเริ่ม (พ.ศ.)"
+        value={formData.doctoral_degree_start_yaer}
+        onChange={handleChange}
+        className={`input-field`}
+      />
+
+      <input
+        type="number"
+        name="doctoral_degree_end_yaer"
+        min={2400}
+        max={3000}
+        placeholder="ปีจบ (พ.ศ.)"
+        value={formData.doctoral_degree_end_yaer}
+        onChange={handleChange}
+        className={`input-field`}
+      />
     </div>
   </section>
+</section>
+
+
 
 {/* ประเภทสมาชิก */}
 <section className="space-y-4">
-  <h2 className="text-2xl font-semibold border-b pb-2">ประเภทสมาชิก</h2>
+  <h2 className="text-2xl font-semibold border-b pb-2">5.ประเภทและหลักฐานการสมัคร</h2>
 
   {/* กล่องรายละเอียดประเภทสมาชิก */}
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -838,15 +841,14 @@ return (
     ))}
   </select>
 
-  {/* อัปโหลดสลิปโอนเงิน */}
-  <div className="md:flex items-center gap-4 mt-4">
+  {/* อัปโหลดหลักฐานการสมัคร */}
+  <div className=" items-center gap-4 mt-4">
     <span className="w-1/5 d-flex">
-      เลือกรูปสลิปเงินโอน<br className="hidden md:block"/>(ขนาดไม่เกิน2MB)
+      หลักฐานการสมัคร(Transcript , ปริญญาบัตร หรืออื่นๆ) (ขนาดไม่เกิน5MB)
     </span>
     <input
     required
       type="file"
-      name="slip"
       onChange={handleChangeFile}
       className="input-field mt-1"
       id="slipInput"
@@ -860,8 +862,8 @@ return (
   <div className="text-center mt-6">
     <button
     disabled={loading}
-     type="submit" className="cursor-pointer bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-transform duration-200">
-     {loading ? 'กำลังส่งแบบสมัคร...' : 'ส่งแบบมัคร'}
+     type="submit" className="cursor-pointer bg-green-500 text-white w-full text-lg font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-transform duration-200">
+     {loading ? 'กำลังส่งแบบสมัคร...' : 'สมัครสมาชิก'}
     </button>
   </div>
 </form>

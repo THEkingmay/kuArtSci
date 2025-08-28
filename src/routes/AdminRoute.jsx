@@ -1,6 +1,5 @@
 import { Route } from "react-router-dom";
 import ProtectAdminRoute from "./ProtectAdminRoute";
-import AdminHome from "../pages/admin/Home";
 import AdminMember from "../pages/admin/Member";
 
 export default function AdminRoute(){
@@ -8,7 +7,7 @@ export default function AdminRoute(){
         <>
             <Route path="/admin" element={
                  <ProtectAdminRoute>
-                        <AdminHome/>
+                        <AdminMember/>
                     </ProtectAdminRoute>
             }/>
              <Route path="/admin/member" element={
@@ -18,7 +17,7 @@ export default function AdminRoute(){
              }/>
             <Route path="/admin/*" element={
                  <ProtectAdminRoute>
-                        <AdminHome/>
+                        <AdminMember/>
                     </ProtectAdminRoute>
             }/>
     

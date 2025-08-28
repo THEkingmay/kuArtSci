@@ -1,5 +1,4 @@
 import { Route } from "react-router-dom"
-import UserHome from "../pages/user/Home"
 import UserMember from "../pages/user/Member"
 import ProtectUserRoute from "./ProtectUserRouter"
 
@@ -8,7 +7,7 @@ export default function UserRoutes(){
         <>
             <Route path="/" element={
                 <ProtectUserRoute>
-                     <UserHome/>
+                     <UserMember/>
                 </ProtectUserRoute>
                 }/>
             <Route path="/member" element={
@@ -18,7 +17,7 @@ export default function UserRoutes(){
                 }/>
             <Route path="/*" element={
                 <ProtectUserRoute>
-                    <UserHome/>
+                    <UserMember/>
                 </ProtectUserRoute>
                 }/>
         </>

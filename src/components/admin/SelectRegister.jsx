@@ -1,43 +1,58 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthProvider";
 
-export default function SelectMemberRegisteraion({ selectMember, clear, fetchData }) {
+export default function SelectMemberRegistration({
+  selectMember,
+  clear,
+  fetchData,
+}) {
   const { API_URL } = useAuth();
-  const [confirmStatus, setConfirmStatus] = useState(null);
-  const [load, setLaod] = useState(false);
-  const [slipUrl, setSlipUrl] = useState(null); // เพิ่ม state สำหรับสลิป
-  const [slipLoadError , setSlipLoadError] = useState(null)
-  const [loadSlip , setLoadSlip] = useState(false)
 
-  const showSlip = async (slipName) => {
+  // States
+  const [confirmStatus, setConfirmStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [transcriptURL, setTranscriptURL] = useState(null);
+  const [transcriptError, setTranscriptError] = useState(null);
+  const [loadingTranscript, setLoadingTranscript] = useState(false);
+
+  // ==================== ดูหลักฐานการเรียน ====================
+  const showTranscript = async (transcript_image_name) => {
     const token = localStorage.getItem("token");
     try {
-      setLoadSlip(true)
-      const res = await fetch(`${API_URL}/member/getSlipImage`, {
+      setLoadingTranscript(true);
+      setTranscriptError(null);
+
+      const res = await fetch(`${API_URL}/member/getTranscriptImage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ slip_payment_name: slipName }),
+        body: JSON.stringify({ transcript_image_name }),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      if(data.slip_url)setSlipUrl(data.slip_url);
-      else setSlipLoadError(true)
+      if (data.transcript_URL) {
+        setTranscriptURL(data.transcript_URL);
+      } else {
+        setTranscriptError(true);
+      }
     } catch (err) {
-      console.log(err);
-    }finally{
-      setLoadSlip(false)
+      console.error(err);
+      setTranscriptError(true);
+    } finally {
+      setLoadingTranscript(false);
     }
   };
 
+  // ==================== เปลี่ยนสถานะการสมัคร ====================
   const handleChangeStatus = async (newStatus) => {
     try {
-      setLaod(true);
+      setLoading(true);
       const res = await fetch(`${API_URL}/member/updateMemberRegistration`, {
-        method: "post",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,18 +62,21 @@ export default function SelectMemberRegisteraion({ selectMember, clear, fetchDat
           newStatus,
         }),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "เกิดข้อผิดพลาด");
+
       await fetchData();
       clear();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
-      setLaod(false);
+      setLoading(false);
       setConfirmStatus(null);
     }
   };
 
+  // ==================== Modal ยืนยัน ====================
   const showConfirm = (status) => {
     if (!status) return null;
 
@@ -66,35 +84,36 @@ export default function SelectMemberRegisteraion({ selectMember, clear, fetchDat
       status === "approved" ? "ยืนยันการสมัคร" : "ปฏิเสธการสมัคร";
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-        <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-          <h2 className="text-lg font-semibold mb-4">{statusText}</h2>
-          <p className="mb-6">
+      <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="bg-white p-6 rounded-2xl shadow-xl w-96 text-center border border-gray-200 animate-fadeIn">
+          <h2 className="text-xl font-bold mb-3 text-gray-800">{statusText}</h2>
+          <p className="mb-5 text-gray-600">
             คุณแน่ใจที่จะ{" "}
-            {status === "approved" ? "ยืนยัน" : "ปฏิเสธ"} สมาชิกคนนี้หรือไม่?
+            <span className="font-semibold">
+              {status === "approved" ? "ยืนยัน" : "ปฏิเสธ"}
+            </span>{" "}
+            สมาชิกคนนี้หรือไม่?
           </p>
           <div className="flex justify-between gap-4">
             <button
-              disabled={load}
-              onClick={() => {
-                handleChangeStatus(status);
-              }}
-              className={`flex-1 py-2 rounded-lg font-medium cursor-pointer ${
+              disabled={loading}
+              onClick={() => handleChangeStatus(status)}
+              className={`flex-1 py-2 rounded-lg font-medium cursor-pointer transition-transform hover:scale-[1.02] ${
                 status === "approved"
-                  ? "bg-green-500 text-white hover:bg-green-600"
-                  : "bg-red-500 text-white hover:bg-red-600"
+                  ? "bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
+                  : "bg-gradient-to-r from-red-500 to-red-600 text-white hover:opacity-90"
               }`}
             >
-              {load
+              {loading
                 ? status === "approved"
                   ? "กำลังอนุมัติ..."
                   : "กำลังปฏิเสธ..."
-                : "ใช่"}
+                : "ยืนยัน"}
             </button>
             <button
-              disabled={load}
+              disabled={loading}
               onClick={() => setConfirmStatus(null)}
-              className="flex-1 cursor-pointer py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+              className="flex-1 cursor-pointer py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
             >
               ยกเลิก
             </button>
@@ -107,35 +126,35 @@ export default function SelectMemberRegisteraion({ selectMember, clear, fetchDat
   if (!selectMember) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       {showConfirm(confirmStatus)}
 
-      {/* Main Modal */}
-      <div className="bg-white border border-gray-300 rounded-xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto shadow-xl p-6 relative">
+      {/* ==================== Main Modal ==================== */}
+      <div className="bg-white border border-gray-200 rounded-2xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative animate-fadeIn">
         {/* Close Button */}
         <button
           onClick={clear}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-4xl cursor-pointer font-bold p-2"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl cursor-pointer font-bold p-2"
         >
           &times;
         </button>
 
-        {/* ================= Header ================= */}
-        <div className="mb-4 border-b pb-2">
-          <h2 className="text-2xl font-semibold text-gray-800">
+        {/* ==================== Header ==================== */}
+        <div className="mb-5 border-b pb-3">
+          <h2 className="text-2xl font-bold text-gray-800">
             {selectMember.prefix || selectMember.custom_prefix}{" "}
             {selectMember.first_name} {selectMember.last_name}
           </h2>
 
           {selectMember.old_fname && (
-            <p className="text-sm text-gray-500">
-              ชื่อเก่า {selectMember.old_fname} นามสกุลเก่า{" "}
-              {selectMember.old_lname}
+            <p className="text-sm text-gray-500 mt-1">
+              (ชื่อเก่า {selectMember.old_fname} นามสกุลเก่า{" "}
+              {selectMember.old_lname})
             </p>
           )}
 
           <span
-            className={`inline-block mt-1 px-3 py-1 text-sm font-medium rounded-full ${
+            className={`inline-block mt-2 px-4 py-1 text-sm font-medium rounded-full shadow-sm ${
               selectMember.status === "pending"
                 ? "bg-yellow-100 text-yellow-800"
                 : selectMember.status === "approved"
@@ -144,147 +163,127 @@ export default function SelectMemberRegisteraion({ selectMember, clear, fetchDat
             }`}
           >
             {selectMember.status === "pending"
-              ? "รอการยืนยัน"
+              ? "⏳ รอการยืนยัน"
               : selectMember.status === "approved"
-              ? "อนุมัติแล้ว"
-              : "ปฏิเสธแล้ว"}
+              ? "✅ อนุมัติแล้ว"
+              : "❌ ปฏิเสธแล้ว"}
           </span>
         </div>
 
-        {/* ================= Personal Info ================= */}
-        <div className="mb-4">
-          <h3 className="text-lg font-medium text-gray-700 mb-2">
+        {/* ==================== Personal Info ==================== */}
+        <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">
             ข้อมูลส่วนตัว
           </h3>
-          <p>
-            รหัสนิสิต:{" "}
-            <span className="font-medium">{selectMember.student_id}</span>
-          </p>
-          <p>
-            วันเกิด: {selectMember.birth_date || "-"} (อายุ:{" "}
-            {selectMember.age || "-"})
-          </p>
-          <p>
-            เชื้อชาติ: {selectMember.race || "-"} ,  สัญชาติ:{" "}
-            {selectMember.nationality || "-"}
-          </p>
-          <p>ศาสนา: {selectMember.religion || "-"}</p>
-        </div>
-
-        {/* ================= Education ================= */}
-        <div className="mb-4">
-          <h3 className="text-lg font-medium text-gray-700 mb-2">การศึกษา</h3>
-
-          {/* ปริญญาตรี */}
-          <div className="mb-2">
-            <p>ปริญญาตรีหลักสูตร: {selectMember.bachelor_degree || "-"}</p>
-            <p>สาขา: {selectMember.bachelor_degree_major || "-"}</p>
-            <p>รุ่น KU: {selectMember.bachelor_degree_ku_batch || "-"}</p>
-            <p>รุ่น ศวท: {selectMember.bachelor_degree_as_batch || "-"}</p>
-            <p>ปีเริ่ม: {selectMember.bachelor_degree_start_year || "-"}</p>
-            <p>ปีจบ: {selectMember.bachelor_degree_end_year || "-"}</p>
-          </div>
-
-          {/* ปริญญาโท */}
-          <div className="mb-2">
-            <p>ปริญญาโทหลักสูตร: {selectMember.master_degree || "-"}</p>
-            <p>สาขา: {selectMember.master_degree_major || "-"}</p>
-            <p>รุ่น KU: {selectMember.master_degree_ku_batch || "-"}</p>
-            <p>รุ่น ศวท: {selectMember.master_degree_as_batch || "-"}</p>
-            <p>ปีเริ่ม: {selectMember.master_degree_start_year || "-"}</p>
-            <p>ปีจบ: {selectMember.master_degree_end_year || "-"}</p>
-          </div>
-
-          {/* ปริญญาเอก */}
-          <div>
-            <p>ปริญญาเอกสูตร: {selectMember.doctoral_degree || "-"}</p>
-            <p>สาขา: {selectMember.doctoral_degree_major || "-"}</p>
-            <p>รุ่น KU: {selectMember.doctoral_degree_ku_batch || "-"}</p>
-            <p>รุ่น ศวท: {selectMember.doctoral_degree_as_batch || "-"}</p>
-            <p>ปีเริ่ม: {selectMember.doctoral_degree_start_year || "-"}</p>
-            <p>ปีจบ: {selectMember.doctoral_degree_end_year || "-"}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-700">
+            <p>📌 รหัสนิสิต: <span className="font-medium">{selectMember.student_id}</span></p>
+            <p>🎂 วันเกิด: {selectMember.birth_date || "-"} (อายุ: {selectMember.age || "-"})</p>
+            <p>🌏 เชื้อชาติ: {selectMember.race || "-"} / {selectMember.nationality || "-"}</p>
+            <p>🕊 ศาสนา: {selectMember.religion || "-"}</p>
+            <p>💼 อาชีพ: {selectMember.job || "-"}</p>
           </div>
         </div>
 
-        {/* ================= Contact ================= */}
-        <div className="mb-4">
-          <h3 className="text-lg font-medium text-gray-700 mb-2">ข้อมูลติดต่อ</h3>
-          <p>ที่อยู่บ้าน: {selectMember.current_home_place || "-"}</p>
-          <p>ที่อยู่ทำงาน: {selectMember.current_work_place || "-"}</p>
-          <p>
-            ช่องทางติดต่อที่สะดวก:{" "}
-            {selectMember.contact_preference || "-"}
-          </p>
-          <p>โทรศัพท์: {selectMember.phone_number || "-"}</p>
-          <p>อีเมลติดต่อ: {selectMember.contact_email || "-"}</p>
-          {selectMember.line_id && <p>Line: {selectMember.line_id}</p>}
-          {selectMember.facebook && <p>Facebook: {selectMember.facebook}</p>}
+        {/* ==================== Education ==================== */}
+        <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">การศึกษา</h3>
+          {["bachelor", "master", "doctoral"].map((level) => (
+            <div key={level} className="mb-3 border-b last:border-b-0 pb-2">
+              <p>
+                🎓 {level === "bachelor"
+                  ? "ปริญญาตรีหลักสูตร"
+                  : level === "master"
+                  ? "ปริญญาโทหลักสูตร"
+                  : "ปริญญาเอกหลักสูตร"}:{" "}
+                <span className="font-medium">
+                  {selectMember[`${level}_degree`] || "-"}
+                </span>
+              </p>
+              <p>สาขา: {selectMember[`${level}_degree_major`] || "-"}</p>
+              <p>รุ่น KU: {selectMember[`${level}_degree_ku_batch`] || "-"}</p>
+              <p>รุ่น ศวท: {selectMember[`${level}_degree_as_batch`] || "-"}</p>
+              <p>ปีเริ่ม: {selectMember[`${level}_degree_start_year`] || "-"}</p>
+              <p>ปีจบ: {selectMember[`${level}_degree_end_year`] || "-"}</p>
+            </div>
+          ))}
         </div>
 
-        {/* ================= Member Info ================= */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-700 mb-2">
-            ข้อมูลสมาชิก
-          </h3>
-          <p>ประเภทการสมัครสมาชิก: {selectMember.member_type}</p>
-          <p>
-            วันที่สมัคร:{" "}
-            {new Date(selectMember.submitted_at).toLocaleDateString("th-TH")}
-          </p>
+        {/* ==================== Contact ==================== */}
+        <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">ข้อมูลติดต่อ</h3>
+          <div className="space-y-1 text-gray-700">
+            <p>🏠 บ้าน: {selectMember.current_home_place || "-"}</p>
+            <p>🏢 ที่ทำงาน: {selectMember.current_work_place || "-"}</p>
+            <p>📞 โทร: {selectMember.phone_number || "-"}</p>
+            <p>📧 อีเมล: {selectMember.contact_email || "-"}</p>
+            {selectMember.line_id && <p>💬 Line: {selectMember.line_id}</p>}
+            {selectMember.facebook && <p>📘 Facebook: {selectMember.facebook}</p>}
+          </div>
+        </div>
 
-          {/* Slip Button */}
+        {/* ==================== Member Info ==================== */}
+        <div className="bg-gray-50 p-4 rounded-lg shadow-inner">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">ข้อมูลสมาชิก</h3>
+          <p>🔖 ประเภทสมาชิก: {selectMember.member_type}</p>
+          <p>📅 วันที่สมัคร: {new Date(selectMember.submitted_at).toLocaleDateString("th-TH")}</p>
+
+          {/* ปุ่มดูหลักฐาน */}
           <button
-            disabled={loadSlip}
-            onClick={() => showSlip(selectMember.slip_payment_name)}
-            className="border cursor-pointer p-2 rounded-lg shadow-sm border-gray-300 mt-2 bg-blue-50 hover:bg-blue-100 transition"
+            disabled={loadingTranscript}
+            onClick={() => showTranscript(selectMember.transcript_image_name)}
+            className="mt-3 px-4 py-2 rounded-lg bg-blue-500 text-white font-medium shadow-md hover:bg-blue-600 transition-all duration-200"
           >
-            { loadSlip? 'กำลังเปิดรูป...':'ดูสลิปการชำระเงิน'}
+            {loadingTranscript ? "⏳ กำลังเปิดหลักฐาน..." : "📄 ดูหลักฐานการเรียน"}
           </button>
-          {slipLoadError && <span className={`border border-red-700 bg-red-100 p-2 rounded-lg ml-3 text-red-800`}>เกิดข้อผิดพลาดในการเปิดรูป !!</span>}
+          {transcriptError && (
+            <span className="ml-3 text-red-600 font-semibold">
+              ❌ เปิดรูปไม่สำเร็จ
+            </span>
+          )}
         </div>
 
-        {/* ================= Action Buttons ================= */}
+        {/* ==================== Action Buttons ==================== */}
         <div className="flex gap-4 mt-6">
           {selectMember.status !== "approved" && (
             <button
               onClick={() => setConfirmStatus("approved")}
-              className="cursor-pointer flex-1 border shadow-sm border-green-400 text-black font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition"
+              className="flex-1 cursor-pointer py-2 rounded-lg font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:opacity-90 shadow-lg transition-all duration-200"
             >
-              ยืนยันการสมัคร
+              ✅ ยืนยันการสมัคร
             </button>
           )}
           {selectMember.status !== "rejected" && (
             <button
               onClick={() => setConfirmStatus("rejected")}
-              className="flex-1 cursor-pointer border shadow-sm border-red-400 text-black font-medium py-2 px-4 rounded-lg hover:bg-red-200 transition"
+              className="flex-1 cursor-pointer py-2 rounded-lg font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:opacity-90 shadow-lg transition-all duration-200"
             >
-              ปฏิเสธการสมัคร
+              ❌ ปฏิเสธการสมัคร
             </button>
           )}
         </div>
       </div>
 
-      {/* ================= Modal แสดงสลิป ================= */}
-      {slipUrl && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
-          <div className="bg-white p-4 rounded-lg shadow-xl max-w-3xl w-[90%] relative">
+      {/* ==================== Modal แสดงหลักฐาน ==================== */}
+      {transcriptURL && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white p-5 rounded-2xl shadow-2xl max-w-3xl w-[90%] relative animate-fadeIn">
             {/* Close Slip Button */}
             <button
-              onClick={() => setSlipUrl(null)}
-              className="absolute top-2 right-2 cursor-pointer text-gray-600 hover:text-black text-3xl font-bold"
+              onClick={() => setTranscriptURL(null)}
+              className="absolute top-3 right-3 cursor-pointer text-gray-600 hover:text-black text-3xl font-bold"
             >
               &times;
             </button>
 
-            <h2 className="text-lg font-semibold mb-3 text-gray-800 text-center">
-              สลิปการโอนเงิน
+            <h2 className="text-lg font-semibold mb-4 text-gray-800 text-center">
+              หลักฐานการเรียน
             </h2>
 
             <div className="flex justify-center">
               <img
-                src={slipUrl}
-                alt="สลิปการชำระเงิน"
-                className="rounded-lg shadow-md max-h-[70vh] object-contain"
+                src={transcriptURL}
+                alt="หลักฐานการเรียน"
+                className="rounded-xl shadow-lg max-h-[75vh] object-contain"
               />
             </div>
           </div>

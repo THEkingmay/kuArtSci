@@ -74,7 +74,7 @@ export default function LoginPage() {
       <div className="bg-white p-10 rounded-xl shadow border border-gray-200 w-full max-w-md">
         {/* หัวข้อ */}
         <h1 className="text-2xl font-semibold text-center text-gray-800">
-          เข้าสู่ระบบ
+          เข้าสู่ระบบแอดมิน
         </h1>
         <p className="text-md text-gray-500 text-center mt-1 mb-6">
           กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ
