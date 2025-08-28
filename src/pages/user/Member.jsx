@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 export default function UserMember() {
   return (
     <>
-      <div className="min-h-screen max-w-4xl mx-auto flex flex-col items-center py-10 px-4">
+      <div className="min-h-screen max-w-4xl mx-auto flex flex-col items-center md:py-10 md:px-4">
         {/* กล่องหลัก */}
-        <div className="w-full  bg-white shadow-lg rounded-2xl border border-gray-200 p-8">
+        <div className="w-full  bg-white shadow-lg rounded-2xl border border-gray-200 md:p-8">
           {/* หัวข้อ + ปุ่มเข้าสู่ระบบ */}
           <div className="flex justify-between items-center mb-6 border-b pb-4">
             <h1 className="text-2xl font-bold text-gray-800">
