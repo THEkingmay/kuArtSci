@@ -606,7 +606,7 @@ return (
     <input
       type="text"
       name="bachelor_degree_major"
-      placeholder="สาขา"
+      placeholder="สาขาวิชา"
       value={formData.bachelor_degree_major}
       onChange={handleChange}
       className={`input-field`}
@@ -672,7 +672,7 @@ return (
     <input
       type="text"
       name="master_degree_major"
-      placeholder="สาขา"
+      placeholder="สาขาวิชา"
       value={formData.master_degree_major}
       onChange={handleChange}
       className={`input-field`}
@@ -737,7 +737,7 @@ return (
       <input
         type="text"
         name="doctoral_degree_major"
-        placeholder="สาขา"
+        placeholder="สาขาวิชา"
         value={formData.doctoral_degree_major}
         onChange={handleChange}
         className={`input-field`}
