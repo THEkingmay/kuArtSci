@@ -5,6 +5,8 @@ import AlertMessage from "../AlertMessage";
 export default function RegisterMemberForm() {
   const {API_URL} = useAuth()
   
+  const [acceptPolicy , setAcceptPolicy] = useState(false)
+
   const [loading , setLoad] = useState(false)
   
   const [alert , setAlert] = useState({
@@ -855,15 +857,47 @@ return (
     />
   </div>
 </section>
+  
+{/* Accept Policy */}
+<section className="mt-6">
+  <h2 className="text-2xl font-semibold pb-2">6. การยืนยันและยอมรับเงื่อนไข</h2>
+  <div className="p-4  rounded-lg bg-gray-50 shadow-sm">
+    <label htmlFor="acceptPolicy" className="flex items-start gap-3 cursor-pointer">
+      {/* Checkbox */}
+      <input
+        id="acceptPolicy"
+        type="checkbox"
+        checked={acceptPolicy}
+        onChange={() => setAcceptPolicy(!acceptPolicy)}
+        className="mt-1 w-5 h-5 accent-green-600 cursor-pointer"
+      />
+
+      {/* Policy Content */}
+      <span className="text-gray-700 text-sm leading-6">
+        ข้าพเจ้าได้อ่านและทำความเข้าใจ
+        <span className="font-semibold"> วัตถุประสงค์และนโยบายการคุ้มครองข้อมูลส่วนบุคคล </span>
+        ของสมาคมศิษย์เก่าคณะศิลปศาสตร์และวิทยาศาสตร์ มหาวิทยาลัยเกษตรศาสตร์
+        เป็นอย่างดีแล้ว และยินยอมให้สมาคมดำเนินการเก็บรวบรวม ใช้ และ/หรือเปิดเผยข้อมูลส่วนบุคคล
+        ตามรายละเอียดที่ได้แจ้งไว้
+      </span>
+    </label>
+  </div>
+</section>
 
 
 {/* แจ้งเตือน */}
   {alert.msg && <AlertMessage type={alert.type} msg={alert.msg} clear={() => setAlert({ type: "", msg: "" })}/>}
   <div className="text-center mt-6">
     <button
-    disabled={loading}
-     type="submit" className="cursor-pointer bg-green-500 text-white w-full text-lg font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-transform duration-200">
-     {loading ? 'กำลังส่งแบบสมัคร...' : 'สมัครสมาชิก'}
+      disabled={loading || !acceptPolicy}
+      type="submit"
+      className={`w-full text-lg font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-200
+        ${loading || !acceptPolicy
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-green-500 text-white hover:bg-green-600 cursor-pointer'
+        }`}
+    >
+      {loading ? 'กำลังส่งแบบสมัคร...' : 'สมัครสมาชิก'}
     </button>
   </div>
 </form>
