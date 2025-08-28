@@ -811,7 +811,7 @@ return (
     <div className="p-4 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition">
       <h3 className="text-lg font-semibold text-green-700">สมาชิกสามัญ ประเภทที่ 2</h3>
       <p className="text-gray-600 mt-2">
-        <span className="font-medium">คุณสมบัติ:</span>บุคคลที่สำเร็จการศีกษามาไม่เกิน 1 ปีการศึกษา นับจากวันที่สำเร็จการศึกษาจนถึงวันที่สมัครเป็นสมาชิก<br />
+        <span className="font-medium">คุณสมบัติ:</span>บุคคลที่สำเร็จการศีกษามา<span className="underline">เกิน</span> 1 ปีการศึกษา นับจากวันที่สำเร็จการศึกษาจนถึงวันที่สมัครเป็นสมาชิก<br />
         <span className="font-medium">ค่าลงทะเบียน:</span> 300 บาท<br />
         <span className="font-medium">ระยะเวลาการเป็นสมาชิก:</span> ตลอดชีพ
       </p>
