@@ -49,24 +49,24 @@ export default function RegisterMemberForm() {
     bachelor_degree_major: "",
     bachelor_degree_KU_batch: "",
     bachelor_degree_AS_batch: "",
-    bachelor_degree_start_yaer: "",
-    bachelor_degree_end_yaer: "",
+    bachelor_degree_start_year: "",
+    bachelor_degree_end_year: "",
 
     // 🟢 ปริญญาโท
     master_degree  : "",
     master_degree_major: "",
     master_degree_KU_batch: "",
     master_degree_AS_batch: "",
-    master_degree_start_yaer: "",
-    master_degree_end_yaer: "",
+    master_degree_start_year: "",
+    master_degree_end_year: "",
 
     // 🟢 ปริญญาเอก
     doctoral_degree:"",
     doctoral_degree_major: "",
     doctoral_degree_KU_batch: "",
     doctoral_degree_AS_batch: "",
-    doctoral_degree_start_yaer: "",
-    doctoral_degree_end_yaer: "",
+    doctoral_degree_start_year: "",
+    doctoral_degree_end_year: "",
 
     // 🟢 ที่อยู่ปัจจุบัน
     homeNo: "",
@@ -323,24 +323,24 @@ const getFullWorkAddress = () => {
             bachelor_degree_major: formData.bachelor_degree_major || null,
             bachelor_degree_ku_batch: toIntOrNull(formData.bachelor_degree_KU_batch),
             bachelor_degree_as_batch: toIntOrNull(formData.bachelor_degree_AS_batch),
-            bachelor_degree_start_year: toIntOrNull(formData.bachelor_degree_start_yaer),
-            bachelor_degree_end_year: toIntOrNull(formData.bachelor_degree_end_yaer),
+            bachelor_degree_start_year: toIntOrNull(formData.bachelor_degree_start_year),
+            bachelor_degree_end_year: toIntOrNull(formData.bachelor_degree_end_year),
 
             // ปริญญาโท
             master_degree : formData.master_degree || null ,
             master_degree_major: formData.master_degree_major || null,
             master_degree_ku_batch: toIntOrNull(formData.master_degree_KU_batch),
             master_degree_as_batch: toIntOrNull(formData.master_degree_AS_batch),
-            master_degree_start_year: toIntOrNull(formData.master_degree_start_yaer),
-            master_degree_end_year: toIntOrNull(formData.master_degree_end_yaer),
+            master_degree_start_year: toIntOrNull(formData.master_degree_start_year),
+            master_degree_end_year: toIntOrNull(formData.master_degree_end_year),
 
             // ปริญญาเอก
             doctoral_degree : formData.master_degree || null ,
             doctoral_degree_major: formData.doctoral_degree_major || null,
             doctoral_degree_ku_batch: toIntOrNull(formData.doctoral_degree_KU_batch),
             doctoral_degree_as_batch: toIntOrNull(formData.doctoral_degree_AS_batch),
-            doctoral_degree_start_year: toIntOrNull(formData.doctoral_degree_start_yaer),
-            doctoral_degree_end_year: toIntOrNull(formData.doctoral_degree_end_yaer),
+            doctoral_degree_start_year: toIntOrNull(formData.doctoral_degree_start_year),
+            doctoral_degree_end_year: toIntOrNull(formData.doctoral_degree_end_year),
             
             current_home_place: fullHomeAddress || null,
             current_work_place: fullWorkAddress || null,
@@ -356,11 +356,13 @@ const getFullWorkAddress = () => {
             member_type: formData.member_type ,
             transcript : formData.transcript
           };
-          // console.log(payload)
+          console.log(payload)
           const formDataToSend = new FormData()
           for (const key in payload) {
-              formDataToSend.append(key, formData[key]);
+            console.log(key )
+              formDataToSend.append(key,payload[key]);
           }
+          console.log(formData)
           try{
             const res= await fetch(`${API_URL}/member/register` , {
               method : 'post' ,
@@ -635,11 +637,11 @@ return (
 
     <input
       type="number"
-      name="bachelor_degree_start_yaer"
+      name="bachelor_degree_start_year"
       min={2400}
       max={3000}
       placeholder="ปีเริ่ม (พ.ศ.)"
-      value={formData.bachelor_degree_start_yaer}
+      value={formData.bachelor_degree_start_year}
       onChange={handleChange}
       className={`input-field`}
     />
@@ -647,11 +649,11 @@ return (
     <input
       type="number"
       
-      name="bachelor_degree_end_yaer"
+      name="bachelor_degree_end_year"
       min={2400}
       max={3000}
       placeholder="ปีจบ (พ.ศ.)"
-      value={formData.bachelor_degree_end_yaer}
+      value={formData.bachelor_degree_end_year}
       onChange={handleChange}
       className={`input-field`}
     />
@@ -701,22 +703,22 @@ return (
 
     <input
       type="number"
-      name="master_degree_start_yaer"
+      name="master_degree_start_year"
       min={2400}
       max={3000}
       placeholder="ปีเริ่ม (พ.ศ.)"
-      value={formData.master_degree_start_yaer}
+      value={formData.master_degree_start_year}
       onChange={handleChange}
       className={`input-field`}
     />
 
     <input
       type="number"
-      name="master_degree_end_yaer"
+      name="master_degree_end_year"
       min={2400}
       max={3000}
       placeholder="ปีจบ (พ.ศ.)"
-      value={formData.master_degree_end_yaer}
+      value={formData.master_degree_end_year}
       onChange={handleChange}
       className={`input-field`}
     />
@@ -766,22 +768,22 @@ return (
 
       <input
         type="number"
-        name="doctoral_degree_start_yaer"
+        name="doctoral_degree_start_year"
         min={2400}
         max={3000}
         placeholder="ปีเริ่ม (พ.ศ.)"
-        value={formData.doctoral_degree_start_yaer}
+        value={formData.doctoral_degree_start_year}
         onChange={handleChange}
         className={`input-field`}
       />
 
       <input
         type="number"
-        name="doctoral_degree_end_yaer"
+        name="doctoral_degree_end_year"
         min={2400}
         max={3000}
         placeholder="ปีจบ (พ.ศ.)"
-        value={formData.doctoral_degree_end_yaer}
+        value={formData.doctoral_degree_end_year}
         onChange={handleChange}
         className={`input-field`}
       />
