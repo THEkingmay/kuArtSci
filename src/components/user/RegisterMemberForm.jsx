@@ -135,6 +135,7 @@ const [formData, setFormData] = useState(initialFormData);
     })
     const id = document.getElementById('slipInput')
     id.value=''
+    setAcceptPolicy(false)
   };
 
 useEffect(()=>{ // ถ้าเปลี่ยนคำนำหน้าไปมา ให้ลบคำนำหน้าที่เขียนเอง
