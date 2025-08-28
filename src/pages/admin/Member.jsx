@@ -59,9 +59,9 @@ export default function AdminMember() {
 
       {/* เนื้อหาหลัก */}
       <div className="min-h-screen md:py-10 md:px-6">
-        <div className="mx-auto bg-white min-h-screen p-5  rounded-2xl border border-gray-200 ma:max-w-6xl md:p-8">
+        <div className="mx-auto bg-white min-h-screen rounded-2xl border border-gray-200 ma:max-w-6xl md:p-8">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 border-b pb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 border-b py-4">
             <h1 className="text-2xl font-bold text-gray-800">
               จัดการการสมัครเข้าร่วมสมาคมศิษย์เก่า
             </h1>
